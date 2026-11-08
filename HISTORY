@@ -1,6 +1,12 @@
 VDR Plugin 'text2skin' Revision History
 ---------------------------------------
 
+2026-11-08: Version 1.4.3
+
+- Fix the Makefile: -fPIC was missing in CFLAGS and CXXFLAGS since 1.4.1, the
+  plugin did not link when VDR's pkg-config file does not provide it (thanks
+  to Alexander Grothe).
+
 2026-11-02: Version 1.4.2
 
 - A message during replay is shown again when only the mode is displayed
