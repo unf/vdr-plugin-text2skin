@@ -1,0 +1,21 @@
+Source: vdr-plugin-text2skin
+Section: video
+Priority: optional
+Maintainer: Frank Neumann <fnu@vdr-portal.de>
+Build-Depends: debhelper-compat (= 13), vdr-dev (>= 2.8.3-4fnu0~), libgraphicsmagick++1-dev, gettext, pkgconf
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/unf/vdr-plugin-text2skin
+
+Package: vdr-plugin-text2skin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${vdr:Depends}
+Suggests: vdr-skin-anthra-1920-fst
+Description: VDR plugin that loads and displays text based skins
+ This plugin is designed to load and interpret a set of files describing the
+ layout of the On Screen Display and to make this "Skin" available to VDR via
+ Setup -> OSD in the main menu. It is possible to load more than one
+ text-based skin this way and to choose between them while running VDR. All
+ skins may be themeable and translateable as the author of the skin wishes.
+ .
+ The skins are loaded from /var/lib/vdr/plugins/text2skin.

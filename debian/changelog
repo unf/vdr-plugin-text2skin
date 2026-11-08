@@ -1,0 +1,1157 @@
+vdr-plugin-text2skin (1.4.2-1fnu0~trixie) trixie; urgency=medium
+
+  * New upstream release 1.4.2:
+    - A message during replay is shown again when only the replay mode is
+      displayed, e.g. "Editing process started" (VDR 2.8 puts it into the
+      replay display). Skins without message objects in replaySmall, like
+      anthra, show their message display while the message is there.
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Mon, 02 Nov 2026 18:29:27 +0100
+
+vdr-plugin-text2skin (1.4.1-2fnu0~trixie) trixie; urgency=medium
+
+  * Upstream moved from Codeberg to GitHub (github.com/unf/vdr-plugin-text2skin):
+    Homepage, debian/copyright and debian/watch updated.
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Mon, 02 Nov 2026 11:29:22 +0100
+
+vdr-plugin-text2skin (1.4.1-1fnu1~trixie) trixie; urgency=medium
+
+  * Rebuild against VDR 2.8.4 (vdr-abi-2.8.4-fnu0).
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Wed, 28 Oct 2026 11:25:55 +0100
+
+vdr-plugin-text2skin (1.4.1-1fnu0~trixie) trixie; urgency=medium
+
+  * New upstream release 1.4.1: Makefile in the style of VDR's plugin
+    template (pkg-config, make install with DESTDIR), Docs/html removed.
+  * debian/rules: build and install with the upstream Makefile, drop
+    debian/install.
+  * Build with the Debian hardening flags of vdr 2.8.3-4fnu0~trixie,
+    Build-Depend on vdr-dev (>= 2.8.3-4fnu0~).
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Sun, 25 Oct 2026 13:16:43 +0100
+
+vdr-plugin-text2skin (1.4.0-1fnu0~trixie) trixie; urgency=medium
+
+  * New upstream release 1.4.0, now at codeberg.org/unf/vdr-plugin-text2skin,
+    contains all former patches: HD skins scaled to the OSD size, true
+    colour mode, Lanczos scaling and dithering, copies of channel, event
+    and recording data, no waiting for VDR's lists in the update thread,
+    token cache dropped on new data, H.264/HEVC/AC-3/HE-AAC/AC-4 tokens,
+    free recording time from VDR
+  * Drop all patches, applied upstream
+  * Homepage and copyright Source point to Codeberg
+  * Install the skin reference, tutorial and RELAX NG schema (uncompressed)
+  * debian/watch for the Codeberg tags instead of a lintian override
+  * Drop the dbgsym migration from the former -dbg package
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Sat, 24 Oct 2026 16:18:16 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-6fnu0~trixie) trixie; urgency=medium
+
+  * Channel info no longer keeps the previous channel when zapping fast:
+    cached tokens are dropped as soon as a display gets new data
+  * contains following patches:
+    -hd-skins-scale-to-osd.patch
+    -lanczos-image-scaling.patch
+    -free-recording-time-from-vdr.patch
+    -true-colour-mode.patch
+    -copy-only-drawn-windows.patch
+    -palette-scaling-without-filter.patch
+    -coalesce-animations.patch
+    -dither-16-to-8-bit.patch
+    -copy-display-data.patch
+    -skip-invalid-reruns.patch
+    -never-wait-for-vdr-lists.patch
+    -video-audio-components.patch
+    -require-vdr-2.4.patch
+    -drop-token-cache-on-change.patch
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Sat, 24 Oct 2026 16:10:12 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-5fnu0~trixie) trixie; urgency=medium
+
+  * Logos keep their colours in palette mode (no filter without colour
+    reduction), complete frames for animations, 16 to 8 bit dithering
+  * Copies of channel, event and recording data instead of VDR's pointers
+    (use after free), the update thread never waits for VDR's lists
+    (VDR could hang when a timer started with the menu open)
+  * Aspect ratio and language tokens for H.264, HEVC, AC-3, HE-AAC, AC-4
+  * Skip reruns without event or on unknown channels (crashed)
+  * Requires VDR 2.4, GraphicsMagick default, README updated
+  * contains following patches:
+    -hd-skins-scale-to-osd.patch
+    -lanczos-image-scaling.patch
+    -free-recording-time-from-vdr.patch
+    -true-colour-mode.patch
+    -copy-only-drawn-windows.patch
+    -palette-scaling-without-filter.patch
+    -coalesce-animations.patch
+    -dither-16-to-8-bit.patch
+    -copy-display-data.patch
+    -skip-invalid-reruns.patch
+    -never-wait-for-vdr-lists.patch
+    -video-audio-components.patch
+    -require-vdr-2.4.patch
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Sat, 24 Oct 2026 12:47:29 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-4fnu0~trixie) trixie; urgency=medium
+
+  * True colour mode for skins with bpp="32" on all windows of a display:
+    images with full colours and alpha blending, anti-aliased text against
+    the real background, only the changed rectangle goes to the OSD
+  * Palette mode copies only the windows that were drawn to the OSD
+  * contains following patches:
+    -hd-skins-scale-to-osd.patch
+    -lanczos-image-scaling.patch
+    -free-recording-time-from-vdr.patch
+    -true-colour-mode.patch
+    -copy-only-drawn-windows.patch
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Sat, 24 Oct 2026 11:54:00 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-3fnu0~trixie) trixie; urgency=medium
+
+  * Scale images with a Lanczos filter instead of nearest neighbour,
+    channel logos on a scaled 4K OSD are no longer blocky
+  * {FreeDiskSpace} as time uses the free recording time from VDR
+    instead of a fixed SD estimate of 25.75 MB/min
+  * contains following patches:
+    -hd-skins-scale-to-osd.patch
+    -lanczos-image-scaling.patch
+    -free-recording-time-from-vdr.patch
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Sat, 24 Oct 2026 11:26:39 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-2fnu0~trixie) trixie; urgency=medium
+
+  * Scale skins with screenBase abs1280x720 or abs1920x1080 to the real OSD
+    size, a 1920x1080 skin (e.g. anthra) fills a 3840x2160 OSD
+  * contains following patches:
+    -hd-skins-scale-to-osd.patch
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Fri, 23 Oct 2026 13:28:39 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-1fnu0~trixie) trixie; urgency=medium
+
+  * Build for VDR 2.8.3 (vdr-abi-2.8.3-fnu0), upstream is unchanged since
+    1.3.4+git20170702 (commit 8f7954d)
+  * Repackaged for Debian 13: debhelper 13, Standards-Version 4.7.2,
+    Rules-Requires-Root: no, Section video, Priority optional
+  * automatic -dbgsym package instead of vdr-plugin-text2skin-dbg
+  * Homepage github.com/vdr-projects, machine-readable debian/copyright
+    (DEP-5)
+  * skins are loaded from /var/lib/vdr/plugins/text2skin, the directory
+    vdr-skin-anthra-update builds the anthra skins into
+  * Maintainer Frank Neumann <fnu@vdr-portal.de>
+
+ -- Frank Neumann <fnu@vdr-portal.de>  Tue, 20 Oct 2026 16:51:15 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-0fnu5~bionic) bionic; urgency=medium
+
+  * rebuild
+
+ -- Frank Neumann <fnu@yavdr.org>  Wed, 29 Dec 2021 22:28:18 +0100
+
+vdr-plugin-text2skin (1.3.4+git20170702-0fnu4~bionic) bionic; urgency=medium
+
+  * rebuild
+
+ -- Frank Neumann <fnu@yavdr.org>  Sat, 25 Dec 2021 03:14:24 +0100
+
+vdr-plugin-text2skin (1.3.4+git20170702-0fnu3~bionic) bionic; urgency=high
+
+  * rebuild
+
+ -- Frank Neumann <fnu@yavdr.org>  Fri, 09 Aug 2019 15:39:54 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-0fnu2~bionic) bionic; urgency=high
+
+  * rebuild
+
+ -- Frank Neumann <fnu@yavdr.org>  Sat, 20 Apr 2019 17:57:29 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-0fnu1~bionic) bionic; urgency=high
+
+  * rebuild
+
+ -- Frank Neumann <fnu@yavdr.org>  Mon, 16 Apr 2018 10:14:27 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170702-0fnu0~bionic) bionic; urgency=high
+
+  * build for zesty
+
+ -- Frank Neumann <fnu@yavdr.org>  Sat, 09 Dec 2017 14:58:08 +0100
+
+vdr-plugin-text2skin (1.3.4+git20170702-0fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+
+ -- Frank Neumann <fnu@yavdr.org>  Sat, 22 Jul 2017 20:23:49 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170606-0fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+
+ -- Frank Neumann <fnu@yavdr.org>  Tue, 06 Jun 2017 14:40:01 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170602-0fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+
+ -- Frank Neumann <fnu@yavdr.org>  Fri, 02 Jun 2017 12:49:38 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170601-0fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+
+ -- Frank Neumann <fnu@yavdr.org>  Fri, 02 Jun 2017 12:39:48 +0200
+
+vdr-plugin-text2skin (1.3.4+git20170529-0fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+
+ -- Frank Neumann <fnu@yavdr.org>  Mon, 29 May 2017 18:33:18 +0200
+
+vdr-plugin-text2skin (1.3.3+git20170524-0fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+
+ -- Frank Neumann <fnu@yavdr.org>  Wed, 24 May 2017 15:25:06 +0200
+
+vdr-plugin-text2skin (1.3.3+git20170523-1fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+  * tryfix striping symbols
+
+ -- Frank Neumann <fnu@yavdr.org>  Tue, 23 May 2017 21:54:28 +0200
+
+vdr-plugin-text2skin (1.3.3+git20170522-0fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+  * cleanup patches
+
+ -- Frank Neumann <fnu@yavdr.org>  Mon, 22 May 2017 18:31:52 +0200
+
+vdr-plugin-text2skin (1.3.3+git20170521-1fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+  * cleanup patches
+  * tryfix striping symbols
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 21 May 2017 23:34:51 +0200
+
+vdr-plugin-text2skin (1.3.3+git20170521-0fnu0~xenial) xenial; urgency=high
+
+  * new upstream snapshot
+  * cleanup patches
+  * tryfix striping symbols
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 21 May 2017 23:15:26 +0200
+
+vdr-plugin-text2skin (1.3.2+git20130504-6fnu1~xenial) xenial; urgency=high
+
+  * get rid of Makefile patch, virtualize options into package structure
+
+ -- Frank Neumann <fnu@yavdr.org>  Wed, 04 Jan 2017 19:16:50 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-6fnu0~xenial) xenial; urgency=high
+
+  * patch Makefile to get debug symbols into DBG package
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 01 Jan 2017 12:39:13 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-5fnu0~xenial) xenial; urgency=high
+
+  * patch Makefile to get debug symbols into DBG package
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 01 Jan 2017 11:59:39 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-4fnu1~xenial) xenial; urgency=high
+
+  * annother rebuild for xenial
+
+ -- Frank Neumann <fnu@yavdr.org>  Sat, 31 Dec 2016 11:19:35 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-4fnu0~xenial) xenial; urgency=high
+
+  * rebuild for xenial
+
+ -- Frank Neumann <fnu@yavdr.org>  Fri, 30 Dec 2016 19:04:18 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu9~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Fri, 25 Dec 2015 11:13:44 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu8~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 13 Dec 2015 19:59:52 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu7~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 22 Nov 2015 10:53:24 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu6~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Thu, 19 Feb 2015 20:30:40 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu5~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Thu, 12 Feb 2015 01:35:00 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu4~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 08 Feb 2015 23:38:34 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu3~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 01 Feb 2015 23:20:13 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu2~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Fri, 30 Jan 2015 01:28:41 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu1~trusty) trusty; urgency=medium
+
+  * automatic rebuild for ppa:fnu/testing-vdr-fnu
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 18 Jan 2015 14:32:33 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-3fnu0~trusty) trusty; urgency=high
+
+  * added text2skin-signal.patch thanks to tomas from vdr-portal.de
+
+ -- Frank Neumann <fnu@yavdr.org>  Thu, 10 Apr 2014 00:31:12 +0200
+
+vdr-plugin-text2skin (1.3.2+git20130504-2fnu3~precise) precise; urgency=high
+
+  * Automatic rebuild for my PPA
+
+ -- Frank Neumann <fnu@yavdr.org>  Wed, 26 Mar 2014 21:57:16 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-2fnu2~precise) precise; urgency=high
+
+  * Rebuild for my PPA
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 16 Mar 2014 23:49:54 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-2fnu1~precise) precise; urgency=high
+
+  * Rebuild for my PPA
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 23 Feb 2014 22:19:42 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-2fnu0~precise) precise; urgency=high
+
+  * change dependency to libgraphicsmagick
+
+ -- Frank Neumann <fnu@yavdr.org>  Wed, 08 Jan 2014 00:15:45 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-1fnu2~trusty) trusty; urgency=high
+
+  * Rebuild for my PPA
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 27 Oct 2013 13:06:10 +0100
+
+vdr-plugin-text2skin (1.3.2+git20130504-1fnu2~precise) precise; urgency=high
+
+  * Rebuild for my PPA
+
+ -- Frank Neumann <fnu@yavdr.org>  Mon, 21 Oct 2013 22:18:44 +0200
+
+vdr-plugin-text2skin (1.3.2+git20130504-1fnu1~precise) precise; urgency=high
+
+  * Rebuild for my PPA
+
+ -- Frank Neumann <fnu@yavdr.org>  Mon, 21 Oct 2013 10:44:15 +0200
+
+vdr-plugin-text2skin (1.3.2+git20130504-1fnu0~precise) precise; urgency=high
+
+  * rebuild for vdr_2.1.2 at testing-vdr-fnu
+  * add text2skin-vdr2.1.2compat.patch by copperhead@vdr-portal.de
+
+ -- Frank Neumann <fnu@yavdr.org>  Mon, 21 Oct 2013 08:26:52 +0200
+
+vdr-plugin-text2skin (1.3.2+git20130504-0fnu1~precise) precise; urgency=high
+
+  * Build for my PPA
+
+ -- Frank Neumann <fnu@yavdr.org>  Thu, 12 Sep 2013 02:58:20 +0200
+
+vdr-plugin-text2skin (1.3.2+git20130504-0fnu0~precise) precise; urgency=high
+
+  * New upstream snapshot
+
+ -- Frank Neumann <fnu@yavdr.org>  Mon, 20 May 2013 15:16:15 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120604-1yavdr0~lucid) lucid; urgency=high
+
+  * Refreshed version
+  * Add disk usage patch for VDR 1.7.28+
+
+ -- Frank Neumann <fnu@yavdr.org>  Tue, 16 Apr 2013 21:12:55 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr10~lucid) lucid; urgency=high
+
+  * Rebuild for yaVDR 0.3.4
+
+ -- Frank Neumann <fnu@yavdr.org>  Tue, 09 Apr 2013 10:59:49 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr9~lucid) lucid; urgency=high
+
+  * Rebuild for yaVDR 0.3.4
+
+ -- Frank Neumann <fnu@yavdr.org>  Thu, 04 Apr 2013 00:22:18 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr8~lucid) lucid; urgency=high
+
+  * Rebuild for yaVDR 0.3.4
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 31 Mar 2013 23:02:55 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr7~lucid) lucid; urgency=high
+
+  * Rebuild for yaVDR 0.3.4
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 31 Mar 2013 15:42:18 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr6~lucid) lucid; urgency=high
+
+  * Rebuild for yaVDR 0.3.4
+
+ -- Frank Neumann <fnu@yavdr.org>  Tue, 19 Mar 2013 19:26:53 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr5~lucid) lucid; urgency=high
+
+  * Rebuild for yaVDR 0.3.4
+
+ -- Frank Neumann <fnu@yavdr.org>  Tue, 19 Mar 2013 14:13:09 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr4~lucid) lucid; urgency=high
+
+  * Rebuild for yaVDR 0.3.4
+
+ -- Frank Neumann <fnu@yavdr.org>  Sat, 16 Mar 2013 18:08:05 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr3~lucid) lucid; urgency=high
+
+  * rebuild for yavdr 0.3.4
+
+ -- Frank Neumann <fnu@yavdr.org>  Thu, 14 Mar 2013 02:37:11 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr12~precise) precise; urgency=medium
+
+  * rebuild
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Thu, 14 Mar 2013 01:09:41 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr10~precise) precise; urgency=medium
+
+  * rebuild
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Wed, 13 Mar 2013 22:00:16 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr9~precise) precise; urgency=high
+
+  * Rebuild for yaVDR64 0.6.0alpha
+
+ -- Frank Neumann <fnu@yavdr.org>  Sun, 10 Mar 2013 21:36:55 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr8~precise) precise; urgency=medium
+
+  * rebuild
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Sun, 09 Dec 2012 19:33:15 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr7~precise) precise; urgency=medium
+
+  * rebuild
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Wed, 05 Dec 2012 21:17:08 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr6~precise) precise; urgency=medium
+
+  * rebuild
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Sat, 01 Dec 2012 16:02:12 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr5~precise) precise; urgency=medium
+
+  * rebuild
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Wed, 21 Nov 2012 20:12:45 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr4~precise) precise; urgency=medium
+
+  * rebuild
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Wed, 21 Nov 2012 07:42:24 +0100
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr3~precise) precise; urgency=medium
+
+  * rebuild
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Thu, 11 Oct 2012 11:22:06 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr2~precise) precise; urgency=medium
+
+  * fix statis-std-string patch
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Wed, 18 Jul 2012 22:51:48 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr1~precise) precise; urgency=medium
+
+  * remove usage of static std::string
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Wed, 18 Jul 2012 19:31:52 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-4yavdr0~precise) precise; urgency=medium
+
+  * add static-std-string patch as workaround for some segfaults
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Tue, 17 Jul 2012 19:35:04 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-3yavdr0~precise) precise; urgency=medium
+
+  * don't install lib and locales in -dbg package
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Fri, 29 Jun 2012 12:30:41 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-2yavdr0~precise) precise; urgency=medium
+
+  * correct -dbg package
+
+ -- Lars Hanisch <dvb@flensrocker.de>  Fri, 29 Jun 2012 08:39:10 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-1yavdr1~precise) precise; urgency=medium
+
+  * Added vdr-plugin-text2skin-dbg Package
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Thu, 28 Jun 2012 10:18:33 +0200
+
+vdr-plugin-text2skin (1.3.2+git20120530-0yavdr0~precise) precise; urgency=medium
+
+  * Removed recording-api-fixes.patch (fixed upstream)
+  * New Upstream Snapshot
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Wed, 30 May 2012 06:50:24 +0200
+
+vdr-plugin-text2skin (1.3.2+git20111218-1yavdr0~precise) precise; urgency=medium
+
+  * added recording-api-fixes.patch
+
+ -- Gerald Dachs <gda@dachsweb.de>  Mon, 26 Mar 2012 21:55:20 +0200
+
+vdr-plugin-text2skin (1.3.2+git20111218-0yavdr0~preicse) precise; urgency=medium
+
+  * New Upstream Snapshot (eb464b67a9ea3ba12056d8f8353d28833dfe68e3)
+  * http://projects.vdr-developer.org/git/vdr-plugin-text2skin.git/commit/?id=eb464b67a9ea3ba12056d8f8353d28833dfe68e3
+
+ -- Reiner Paulus <flex0r@gmx.net>  Sun, 18 Dec 2011 11:54:50 +0100
+
+vdr-plugin-text2skin (1.3.1.git20110618-0yavdr5~precise) precise; urgency=medium
+
+  * change control file libmagick++9-dev -> libmagick++-dev
+
+ -- Reiner Paulus <flex0r@gmx.net>  Wed, 14 Dec 2011 22:46:18 +0100
+
+vdr-plugin-text2skin (1.3.1.git20110618-0yavdr0~natty) natty; urgency=medium
+
+  * New Upstream Snapshot
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Sat, 18 Jun 2011 07:08:29 +0200
+
+vdr-plugin-text2skin (1.3.1-23yavdr1~natty) natty; urgency=low
+
+  * cast to size_t for std::min in bitmap.c
+
+ -- Gerald Dachs <gda@dachsweb.de>  Wed, 23 Mar 2011 09:34:06 +0100
+
+vdr-plugin-text2skin (1.3.1-20yavdr1) lucid; urgency=low
+
+  * prevent crashes with recordings without names
+
+ -- Gerald Dachs <gda@dachsweb.de>  Thu, 24 Feb 2011 13:45:01 +0100
+
+vdr-plugin-text2skin (1.3.1-19yavdr1) lucid; urgency=low
+
+  * added NarrowHD patch
+
+ -- Gerald Dachs <gda@dachsweb.de>  Wed, 23 Feb 2011 08:46:54 +0100
+
+vdr-plugin-text2skin (1.3.1-11yavdr1) lucid; urgency=low
+
+  * added common.c patch (winni)
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Sat, 08 Jan 2011 13:18:28 +0200
+
+vdr-plugin-text2skin (1.3.1-0yavdr1) lucid; urgency=low
+
+  * New upstream release
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Wed, 23 Jun 2010 08:12:25 +0200
+
+vdr-plugin-text2skin (1.3+git20100419-3yavdr1) lucid; urgency=low
+
+  * added ts2-reruns patch http://vdrportal.de/board/thread.php?threadid=96605
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Tue, 25 May 2010 16:31:55 +0200
+
+vdr-plugin-text2skin (1.3+git20100419-2yavdr1) lucid; urgency=low
+
+  * reb. vdr-1.7.14 unstable repo
+  * Switch to dpkg-source 3.0 (quilt) format
+
+ -- Holger Schvestka <hotzenplotz5@gmx.de>  Tue, 25 May 2010 16:25:37 +0200
+
+vdr-plugin-text2skin (1.3-3tvt1) karmic; urgency=low
+
+  * updated ABI version
+
+ -- Gerald Dachs <gda@dachsweb.de>  Fri, 25 Dec 2009 21:08:24 +0100
+
+vdr-plugin-text2skin (1.3-1gda2) karmic; urgency=low
+
+  * added build requirement pkg-config
+
+ -- Gerald Dachs <gda@dachsweb.de>  Thu, 08 Oct 2009 10:47:21 +0200
+
+vdr-plugin-text2skin (1.3-1gda1) jaunty; urgency=low
+
+  * New upstream release
+  * removed text2skin-1.2-hd patch
+  * removed svdrp reload patch from maverick-me
+  * increment
+
+ -- Gerald Dachs <gda@dachsweb.home>  Thu, 08 Oct 2009 10:47:14 +0200
+
+vdr-plugin-text2skin (1.2+git20091001-1gda1) jaunty; urgency=low
+
+  * used newest git release
+  * added svdrp reload patch from maverick-me
+
+ -- Gerald Dachs <gda@dachsweb.de>  Thu, 01 Oct 2009 20:14:45 +0200
+
+vdr-plugin-text2skin (1.2-2gda1) jaunty; urgency=low
+
+  * added text2skin-1.2-hd patch
+
+ -- Gerald Dachs <gda@dachsweb.de>  Tue, 29 Sep 2009 18:11:52 +0200
+
+vdr-plugin-text2skin (1.2-1gda1) jaunty; urgency=low
+
+  * new upstream version
+
+ -- Gerald Dachs <gda@dachsweb.de>  Tue, 18 Aug 2009 22:02:56 +0200
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-8gda7) jaunty; urgency=low
+
+  * Rebuild against vdr-1.6.0-10gda7
+
+ -- Gerald Dachs <gda@dachsweb.de>  Sat, 16 May 2009 12:14:45 +0200
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-8gda2) jaunty; urgency=low
+
+  * fixed Makefile for imagemagick
+
+ -- Gerald Dachs <gda@dachsweb.de>  Wed, 08 Apr 2009 19:28:40 +0200
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-8gda1) jaunty; urgency=low
+
+  * Rebuild against vdr-1.6.0-9gda3
+
+ -- Gerald Dachs <gda@dachsweb.de>  Mon, 23 Mar 2009 18:59:21 +0100
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-7) experimental; urgency=low
+
+  * Added 96_gcc43.dpatch
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sun, 27 Jul 2008 11:21:47 +0200
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-6) experimental; urgency=low
+
+  * Dropped patchlevel control field
+  * Build-Depend on vdr-dev (>=1.6.0-5)
+  * Bumped Standards-Version to 3.8.0
+
+ -- Tobias Grimm <tg@e-tobi.net>  Fri, 25 Jul 2008 19:27:55 +0200
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-5) experimental; urgency=low
+
+  * Just build-depend on libmagick++9-dev - this will wotk for
+    Etch, Sid and Ubuntu Hardy
+
+ -- Tobias Grimm <tg@e-tobi.net>  Thu, 22 May 2008 21:36:08 +0200
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-4) experimental; urgency=low
+
+  * Increased package version to force rebuild for vdr 1.6.0-1ctvdr7
+
+ -- Tobias Grimm <tg@e-tobi.net>  Mon, 12 May 2008 13:16:11 +0200
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-3) experimental; urgency=low
+
+  * Build-depend on vdr-dev (>= 1.6.0)
+  * Using COMPAT=5 now
+
+ -- Tobias Grimm <tg@e-tobi.net>  Fri, 04 Apr 2008 14:26:10 +0200
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-2) experimental; urgency=low
+
+  * Force rebuild for vdr 1.5.15
+
+ -- Tobias Grimm <tg@e-tobi.net>  Mon, 18 Feb 2008 21:09:19 +0100
+
+vdr-plugin-text2skin (1.0+cvs20080122.2311-1) experimental; urgency=low
+
+  * New Upstream Snapshot
+    - Removed 91_cvs-20051107.dpatch
+    - Removed 92_vdr-1.3.38.dpatch
+  * Added 95_text2skin-1.1-cvs-locale.dpatch
+    - Removed 01_Makefile-fPIC-fix.dpatch
+    - Removed 90_APIVERSION.dpatch
+    - Removed 95_text2skin-1.1-cvs_ext-0.10-20070620.3-vdr-1.5.7-1.dpatch
+    - Added gettext to Build-Depends
+    - Added installation of locale files
+  * Switched Build-System to cdbs, Build-Depend on cdbs
+  * Fixed debian-rules-ignores-make-clean-error
+  * Added get-orig-source target to debian/rules to download the newest
+    cvs-snapshot
+  * Bumped Standards-Version to 3.7.3
+  * Added Homepage field to debian/control
+  * Renamed XS-Vcs-* fields to Vcs-* in debian/control
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sun, 10 Feb 2008 14:12:39 +0100
+
+vdr-plugin-text2skin (1.0+cvs20050618-31) experimental; urgency=low
+
+  * Release for vdrdevel 1.5.10
+
+ -- Thomas Günther <tom@toms-cafe.de>  Tue, 16 Oct 2007 23:51:04 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-30) experimental; urgency=low
+
+  * Added 95_text2skin-1.1-cvs_ext-0.10-20070620.3-vdr-1.5.7-1.dpatch
+  * Added full license disclaimer and copyright years to debian/copyright
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sat,  1 Sep 2007 13:09:22 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-29) experimental; urgency=low
+
+  * Release for vdrdevel 1.5.6
+
+ -- Thomas Günther <tom@toms-cafe.de>  Tue, 14 Aug 2007 01:46:26 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-28) experimental; urgency=low
+
+  [ Thomas Schmidt ]
+  * Added XS-Vcs-Svn and XS-Vcs-Browser fields to debian/control
+  * Removed version from Build-Dependancy to dpatch - even Sarge has the
+    required version
+
+  [ Thomas Günther ]
+  * Release for vdrdevel 1.5.5
+  * Added 94_text2skin-1.1-cvs_ext-0.10-vdr-1.5.4.dpatch
+
+ -- Thomas Günther <tom@toms-cafe.de>  Thu, 28 Jun 2007 00:34:58 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-27) experimental; urgency=low
+
+  * Release for vdrdevel 1.5.2
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sat, 28 Apr 2007 00:00:47 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-26) experimental; urgency=low
+
+  * Release for vdrdevel 1.5.1
+
+ -- Thomas Günther <tom@toms-cafe.de>  Tue, 27 Feb 2007 19:59:24 +0100
+
+vdr-plugin-text2skin (1.0+cvs20050618-25) experimental; urgency=low
+
+  [ Thomas Günther ]
+  * Replaced VDRdevel adaptions in debian/rules with make-special-vdr
+  * Adapted call of dependencies.sh and patchlevel.sh to the new location
+    in /usr/share/vdr-dev/
+
+  [ Tobias Grimm ]
+  * Build-Depend on vdr-dev (>=1.4.5-1)
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sun, 14 Jan 2007 20:17:24 +0100
+
+vdr-plugin-text2skin (1.0+cvs20050618-24) unstable; urgency=low
+
+  * Build-Depend on vdr-dev (>=1.4.4-1)
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sun,  5 Nov 2006 11:45:44 +0100
+
+vdr-plugin-text2skin (1.0+cvs20050618-23) unstable; urgency=low
+
+  * Build-Depend on vdr-dev (>=1.4.3-1)
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sat, 23 Sep 2006 20:33:01 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-22) unstable; urgency=low
+
+  * Added 93_libfreetype6-2.2.1.dpatch (Thx to DrSat at vdrportal.de and Jerome)
+
+ -- Tobias Grimm <tg@e-tobi.net>  Mon,  4 Sep 2006 20:39:26 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-21) unstable; urgency=low
+
+  * Build-Depend on vdr-dev (>=1.4.2-1)
+  * Bumped Standards-Version to 3.7.2
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sun, 27 Aug 2006 14:39:36 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-20) unstable; urgency=low
+
+  * Thomas Schmidt <tschmidt@debian.org>
+    - Build-Depend on vdr-dev (>=1.4.1-1)
+
+ -- Debian VDR Team <pkg-vdr-dvb-devel@lists.alioth.debian.org>  Fri, 16 Jun 2006 22:10:32 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-19) unstable; urgency=low
+
+  * Thomas Schmidt <tschmidt@debian.org>
+    - Build-Depend on vdr-dev (>=1.4.0-1)
+
+ -- Debian VDR Team <pkg-vdr-dvb-devel@lists.alioth.debian.org>  Wed,  3 May 2006 23:08:59 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-18) unstable; urgency=low
+
+  * Tobias Grimm <tg@e-tobi.net>
+    - Build-Depend on vdr (>=1.3.48-1)
+    - Added 90_APIVERSION.dpatch
+
+ -- Debian VDR Team <pkg-vdr-dvb-devel@lists.alioth.debian.org>  Mon, 24 Apr 2006 22:08:35 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-17) unstable; urgency=low
+
+  * Thomas Schmidt <tschmidt@debian.org>
+    - Build-Depend on vdr-dev (>=1.3.47-1)
+
+ -- Debian VDR Team <pkg-vdr-dvb-devel@lists.alioth.debian.org>  Thu, 20 Apr 2006 08:30:19 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-16) unstable; urgency=low
+
+  * Tobias Grimm <tg@e-tobi.net>
+    - Build-Depend on vdr (>=1.3.46-1)
+
+ -- Debian VDR Team <pkg-vdr-dvb-devel@lists.alioth.debian.org>  Wed, 12 Apr 2006 22:14:09 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-15) unstable; urgency=low
+
+  * Tobias Grimm <tg@e-tobi.net>
+    - Build-Depend on vdr (>=1.3.45-1)
+
+ -- Debian VDR Team <pkg-vdr-dvb-devel@lists.alioth.debian.org>  Mon, 27 Mar 2006 21:33:25 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-14) unstable; urgency=low
+
+  * Tobias Grimm <tg@e-tobi.net>
+    - Build-Depend on vdr (>=1.3.41-1)
+
+ -- Debian VDR Team <pkg-vdr-dvb-devel@lists.alioth.debian.org>  Tue, 31 Jan 2006 01:40:53 +0100
+
+vdr-plugin-text2skin (1.0+cvs20050618-13) unstable; urgency=low
+
+  * Tobias Grimm <tg@e-tobi.net>
+    - Added 92_vdr-1.3.38.dpatch
+    - Build-Depend on vdr-dev (>=1.3.40-1)
+
+ -- Debian VDR Team <pkg-vdr-dvb-devel@lists.alioth.debian.org>  Thu, 26 Jan 2006 14:29:38 +0100
+
+vdr-plugin-text2skin (1.0+cvs20050618-12) unstable; urgency=low
+
+  * Added libmagick++9-dev to dependencies
+
+ -- Tobias Grimm <tg@e-tobi.net>  Mon,  5 Dec 2005 22:59:03 +0100
+
+vdr-plugin-text2skin (1.0+cvs20050618-11) unstable; urgency=low
+
+  * Tobias Grimm <tg@e-tobi.net>
+    - Build-Depend on vdr (>=1.3.37-1)
+  * Thomas Günther <tom@toms-cafe.de>
+    - Added 91_cvs-20051107.dpatch
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sat,  3 Dec 2005 20:56:29 +0100
+
+vdr-plugin-text2skin (1.0+cvs20050618-10) unstable; urgency=low
+
+  * Build-Depend on vdr (>=1.3.33-1)
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sun,  2 Oct 2005 10:34:08 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-9) unstable; urgency=low
+
+  * Build-Depend on vdr (>=1.3.32-1)
+
+ -- Tobias Grimm <tg@e-tobi.net>  Wed, 14 Sep 2005 19:17:58 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-8) unstable; urgency=low
+
+  * Depend/Build-Depend on vdr (>=1.3.31-1)
+  * Conflict with vdr (>=1.3.31.99)
+  * Use dependencies.sh from vdr-dev to set vdr dependencies and
+    conflicts
+
+ -- Tobias Grimm <tg@e-tobi.net>  Tue, 30 Aug 2005 23:07:14 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-7) unstable; urgency=low
+
+  * Depend/Build-Depend on vdr (>=1.3.30-1)
+  * Conflict with vdr (>=1.3.30.99)
+
+ -- Tobias Grimm <tg@e-tobi.net>  Mon, 22 Aug 2005 17:31:43 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-6) unstable; urgency=low
+
+  * Depend/Build-Depend on vdr (>=1.3.29-1)
+  * Conflict with vdr (>=1.3.30)
+  * Added vdr-skins to Suggests
+
+ -- Tobias Grimm <tg@e-tobi.net>  Tue,  9 Aug 2005 18:12:52 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-5) unstable; urgency=low
+
+  * Depend/Build-Depend on vdr (>=1.3.28-1)
+  * Conflict with vdr (>=1.3.29)
+  * Bumped Standards-Version to 3.6.2
+
+ -- Tobias Grimm <tg@e-tobi.net>  Mon,  8 Aug 2005 20:25:57 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-4) unstable; urgency=low
+
+  * Fixed typo in vdr dependency
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sun, 26 Jun 2005 19:40:56 +0200
+
+vdr-plugin-text2skin (1.0+cvs20050618-3) unstable; urgency=low
+
+  * vdrdevel -> vdr
+  * Depend/Build-Depend on vdr (>=1.3.27-1)
+  * Conflict with vdr (>=1.3.28)
+
+ -- Tobias Grimm <tg@e-tobi.net>  Sun, 26 Jun 2005 19:26:35 +0200
+
+vdrdevel-plugin-text2skin (1.0+cvs20050618-2) unstable; urgency=low
+
+  * VDR-1.3.27
+
+ -- Thomas Günther <tom@toms-cafe.de>  Tue, 21 Jun 2005 00:21:22 +0200
+
+vdrdevel-plugin-text2skin (1.0+cvs20050618-1) unstable; urgency=low
+
+  * New upstream cvs release
+  * Removed cvs-2005.01.22.23.39.40 patch
+  * Removed fixed_digit_width patch
+  * Removed progress-bar-tab patch
+  * Changed dependency to vdrdevel (>= 1.3.25)
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sat, 18 Jun 2005 21:05:58 +0200
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-10) unstable; urgency=low
+
+  * VDR-1.3.26
+  * Upgraded 95_vdrdevel.dpatch to version 0.1.0
+
+ -- Thomas Günther <tom@toms-cafe.de>  Fri, 17 Jun 2005 12:49:57 +0200
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-9) unstable; urgency=low
+
+  * VDR-1.3.25
+  * Upgraded 95_vdrdevel.dpatch to version 0.0.9
+
+ -- Thomas Günther <tom@toms-cafe.de>  Mon, 30 May 2005 23:56:53 +0200
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-8) unstable; urgency=low
+
+  * VDR-1.3.24
+
+ -- Thomas Günther <tom@toms-cafe.de>  Tue, 10 May 2005 02:41:39 +0200
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-7) unstable; urgency=low
+
+  * VDR-1.3.23
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sun, 20 Mar 2005 23:27:30 +0100
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-6) unstable; urgency=low
+
+  * VDR-1.3.22-4
+
+ -- Thomas Günther <tom@toms-cafe.de>  Thu, 10 Mar 2005 01:49:33 +0100
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-5) unstable; urgency=low
+
+  * VDR-1.3.22
+
+ -- Thomas Günther <tom@toms-cafe.de>  Mon, 28 Feb 2005 02:42:07 +0100
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-4) unstable; urgency=low
+
+  * VDR-1.3.21
+
+ -- Thomas Günther <tom@toms-cafe.de>  Tue, 15 Feb 2005 17:37:25 +0100
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-3) unstable; urgency=low
+
+  * VDR-1.3.20
+  * Updated 95_vdrdevel.dpatch to version 0.0.8
+
+ -- Thomas Günther <tom@toms-cafe.de>  Tue,  8 Feb 2005 11:33:59 +0100
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-2) unstable; urgency=low
+
+  * VDR-1.3.19
+  * Updated 95_vdrdevel.dpatch to version 0.0.7
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sun, 23 Jan 2005 22:48:20 +0100
+
+vdrdevel-plugin-text2skin (0.9+1.0rc2-1) unstable; urgency=low
+
+  * New upstream release (1.0 release candidate 2 from
+    http://www.magoa.net/linux/contrib/vdr-text2skin-1.0-rc2.tgz)
+  * Removed cvs-2005.01.17.03.17.01 patch
+  * Added cvs-2005.01.22.23.39.40 patch
+  * Added fixed_digit_width patch
+  * Added progress-bar-tab patch
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sat, 22 Jan 2005 23:29:29 +0100
+
+vdrdevel-plugin-text2skin (0.9+1.0rc1-1) unstable; urgency=low
+
+  * VDR 1.3.18
+  * New upstream release (1.0 release candidate 1 from
+    http://www.magoa.net/linux/contrib/vdr-text2skin-1.0-rc1.tgz)
+  * New upstream release
+  * Added cvs-2005.01.17.03.17.01 patch
+  * Updated 95_vdrdevel.dpatch to version 0.0.6
+
+ -- Thomas Günther <tom@toms-cafe.de>  Mon, 17 Jan 2005 23:35:46 +0100
+
+vdrdevel-plugin-text2skin (0.0.8.1-6) unstable; urgency=low
+
+  * vdrdevel-1.3.17-5: changed patchlevel
+
+ -- Thomas Günther <tom@toms-cafe.de>  Mon,  3 Jan 2005 16:28:20 +0100
+
+vdrdevel-plugin-text2skin (0.0.8.1-5) unstable; urgency=low
+
+  * VDR 1.3.17
+  * Converted changelog to UTF-8
+
+ -- Thomas Günther <tom@toms-cafe.de>  Mon, 22 Nov 2004 02:49:35 +0100
+
+vdrdevel-plugin-text2skin (0.0.8.1-4) unstable; urgency=low
+
+  * Build-Depends to libmagick++-dev for sarge & woody-backport
+
+ -- Thomas Günther <tom@toms-cafe.de>  Wed, 17 Nov 2004 01:05:48 +0100
+
+vdrdevel-plugin-text2skin (0.0.8.1-3) unstable; urgency=low
+
+  * VDR 1.3.16
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sun, 14 Nov 2004 21:41:34 +0100
+
+vdrdevel-plugin-text2skin (0.0.8.1-2) unstable; urgency=low
+
+  * VDR 1.3.15
+
+ -- Thomas Günther <tom@toms-cafe.de>  Tue,  2 Nov 2004 01:38:39 +0100
+
+vdrdevel-plugin-text2skin (0.0.8.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Thomas Günther <tom@toms-cafe.de>  Thu, 28 Oct 2004 01:03:21 +0200
+
+vdrdevel-plugin-text2skin (0.0.8-3) unstable; urgency=low
+
+  * VDR 1.3.14
+  * Adapted patches for new dpatch >= 2.0.9
+  * Changed Build-Depends to libmagick++-dev-5.5.7 to fix color errors
+  * Updated 95_vdrdevel.dpatch to version 0.0.5
+  * Using debian/compat now
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sun, 24 Oct 2004 03:21:49 +0200
+
+vdrdevel-plugin-text2skin (0.0.8-2) unstable; urgency=low
+
+  * VDR 1.3.12
+  * Adapted directory structure to vdrdevel-1.3.12
+  * Adapted control file to alioth packages
+  * Using patchlevel.sh and custom control field "vdr-patchlevel"
+  * Added Makefile-fPIC-fix patch to fix potential FTBFS
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sun,  5 Sep 2004 21:12:55 +0200
+
+vdrdevel-plugin-text2skin (0.0.8-1) unstable; urgency=low
+
+  * New upstream release
+  * Updated 95_vdrdevel.dpatch to version 0.0.3
+
+ -- Thomas Günther <tom@toms-cafe.de>  Thu, 15 Jul 2004 01:35:58 +0200
+
+vdrdevel-plugin-text2skin (0.0.7-1) unstable; urgency=low
+
+  * New upstream release
+  * Fixed debhelper version in Build-Depends
+  * Added debian/watch file for uscan
+  * Removed debian/dirs
+  * Updated 95_vdrdevel.dpatch to version 0.0.2
+  * Fixed rules: make clean without .dependencies
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sun, 27 Jun 2004 19:31:33 +0200
+
+vdrdevel-plugin-text2skin (0.0.6-2) unstable; urgency=low
+
+  * VDR 1.3.11
+
+ -- Thomas Günther <tom@toms-cafe.de>  Sun, 20 Jun 2004 02:48:10 +0200
+
+vdrdevel-plugin-text2skin (0.0.6-1) unstable; urgency=low
+
+  * New upstream release
+  * Removed 01_Makefile.dpatch (already fixed in upstream)
+
+ -- Thomas Günther <tom@toms-cafe.de>  Fri, 18 Jun 2004 19:06:24 +0200
+
+vdrdevel-plugin-text2skin (0.0.5-1) unstable; urgency=low
+
+  * Fixed names, emails, urls in control, changelog, copyright
+  * Fixed dependencies in control
+  * Added dirs
+  * Removed some unnecessary files
+  * Removed TODO from docs
+  * Removed CVS directories
+  * Use dpatch to convert from vdr to vdrdevel
+  * Added etc/vdr/plugins/text2skin to dirs
+
+ -- Thomas Günther <tom@toms-cafe.de>  Fri, 18 Jun 2004 02:07:41 +0200
+
+vdrdevel-plugin-text2skin (0.0.5-0) unstable; urgency=low
+
+  * Initial Release
+
+ -- Catweazle <xx@xxxx.net>  Wed, 16 Jun 2004 00:58:23 +0200
