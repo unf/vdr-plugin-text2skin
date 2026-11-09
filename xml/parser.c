@@ -211,34 +211,36 @@ bool xStartElem(const std::string &name, std::map<std::string,std::string> &attr
 }
 
 bool xCharData(const std::string &text) {
-	int start = 0, end = text.length() - 1;
+	static const char whitespace[] = "\012\015 \t";
 
 	//Dprintf("char data before: %s\n", text.c_str());
 
-	while (text[start] == '\012' || text[start] == '\015' || text[start] == ' ' || text[start] == '\t')
-		++start;
-
-	while (text[end] == '\012' || text[end] == '\015' || text[end] == ' ' || text[end] == '\t')
-		--end;
+	// The text between two tags is mostly whitespace only (line break and
+	// indentation) or empty, there is nothing to do then.
+	std::string::size_type start = text.find_first_not_of(whitespace);
+	if (start == std::string::npos)
+		return true;
+	std::string::size_type end = text.find_last_not_of(whitespace);
 
 	//Dprintf("char data after: %s\n", text.substr(start, end - start + 1).c_str());
 
-	if (end - start + 1 > 0) {
-		//Dprintf("context: %s\n", context[context.size() - 1].c_str());
-		if      (context[context.size() - 1] == "text"
-		      || context[context.size() - 1] == "marquee"
-		      || context[context.size() - 1] == "blink"
-		      || context[context.size() - 1] == "scrolltext") {
-			if (!object->mText.Parse(text.substr(start, end - start + 1)))
-				return false;
-		} else
-			esyslog("ERROR: Bad character data");
-	}
+	//Dprintf("context: %s\n", context[context.size() - 1].c_str());
+	if (!context.empty()
+	    && (context[context.size() - 1] == "text"
+	     || context[context.size() - 1] == "marquee"
+	     || context[context.size() - 1] == "blink"
+	     || context[context.size() - 1] == "scrolltext")) {
+		if (!object->mText.Parse(text.substr(start, end - start + 1)))
+			return false;
+	} else
+		esyslog("ERROR: Bad character data");
 	return true;
 }
 
 bool xEndElem(const std::string &name) {
 	//Dprintf("end element: %s\n", name.c_str());
+	if (context.empty())
+		TAG_ERR_END("document");
 	if (context[context.size() - 1] == name) {
 		if      (name == "display") {
 			//display->mNumMarquees = mindex;

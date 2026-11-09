@@ -82,7 +82,7 @@ void cText2SkinStatus::Replaying(const cControl* /*Control*/, const char *Name,
 			else if (strlen(Name) > 7) {
 				int i, n;
 				for (i = 0, n = 0; Name[i]; ++i) {
-					if (Name[i] == ' ' && Name[i-1] == ',' && ++n == 4)
+					if (Name[i] == ' ' && i > 0 && Name[i-1] == ',' && ++n == 4)
 						break;
 				}
 				if (Name[i]) { // replaying DVD

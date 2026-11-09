@@ -829,7 +829,7 @@ cxType cText2SkinRender::GetToken(const txToken &Token)
 				int pos;
 				if ((pos = str.find(" - ")) != -1) {
 					str.erase(pos);
-					while (str[str.length() - 1] == ' ')
+					while (!str.empty() && str[str.length() - 1] == ' ')
 						str.erase(str.length() - 1);
 					res = str;
 				}
@@ -837,7 +837,7 @@ cxType cText2SkinRender::GetToken(const txToken &Token)
 			}
 			else if (Token.Type == tReplayTitle) {
 				if (Text2SkinStatus.ReplayMode() == cText2SkinStatus::replayMP3
-				    && str[0] == '[' && str[3] == ']') {
+				    && str.length() >= 4 && str[0] == '[' && str[3] == ']') {
 					str.erase(0, 4);
 					res = str;
 				}
