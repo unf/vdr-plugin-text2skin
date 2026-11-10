@@ -16,7 +16,7 @@
 #error "VDR-2.4.0 API version or greater is required!"
 #endif
 
-const char *cText2SkinPlugin::VERSION        = "1.4.3";
+const char *cText2SkinPlugin::VERSION        = "1.4.4";
 const char *cText2SkinPlugin::SKINVERSION    = "1.1";
 const char *cText2SkinPlugin::DESCRIPTION    = trNOOP("Loader for text-based skins");
 

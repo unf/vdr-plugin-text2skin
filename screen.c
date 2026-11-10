@@ -43,14 +43,15 @@ eOsdError cText2SkinScreen::SetAreas(const tArea *Areas, int NumAreas)
 			trueColor = false;
 
 	if (trueColor) {
-		tArea area = Areas[0];
+		// The area starts at the top left corner of the OSD. VDR sets the size
+		// of a true colour OSD to the size of its area, and output devices like
+		// softhddevice clip to that size from the corner: an area further down
+		// (channel info, replay, volume) stayed invisible there.
+		tArea area = { 0, 0, Areas[0].x2, Areas[0].y2, 32 };
 		for (int i = 1; i < NumAreas; ++i) {
-			area.x1 = std::min(area.x1, Areas[i].x1);
-			area.y1 = std::min(area.y1, Areas[i].y1);
 			area.x2 = std::max(area.x2, Areas[i].x2);
 			area.y2 = std::max(area.y2, Areas[i].y2);
 		}
-		area.bpp = 32;
 		if (mOsd->CanHandleAreas(&area, 1) == oeOk && mOsd->SetAreas(&area, 1) == oeOk
 		    && mOsd->IsTrueColor()) {
 			mOrigin = cPoint(area.x1, area.y1);
