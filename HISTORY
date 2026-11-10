@@ -1,6 +1,15 @@
 VDR Plugin 'text2skin' Revision History
 ---------------------------------------
 
+2026-11-10: Version 1.4.4
+
+- Fix out-of-range string accesses: VDR built with -D_GLIBCXX_ASSERTIONS aborted
+  while loading a skin (thanks to Alexander Grothe).
+- A true colour OSD area now starts at the top left corner of the OSD. VDR sets
+  the size of a true colour OSD to the size of its area, and output devices like
+  softhddevice clip to that size from the corner: the channel info, the replay
+  display and the volume bar stayed invisible there (thanks to Alexander Grothe).
+
 2026-11-08: Version 1.4.3
 
 - Fix the Makefile: -fPIC was missing in CFLAGS and CXXFLAGS since 1.4.1, the
