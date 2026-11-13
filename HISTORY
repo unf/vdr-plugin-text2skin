@@ -1,6 +1,12 @@
 VDR Plugin 'text2skin' Revision History
 ---------------------------------------
 
+2026-11-13: Version 1.4.5
+
+- A display that switches its windows (a message during replay, e.g. "Editing
+  process started") now gets a new OSD instead of new areas on the same OSD:
+  softhddevice crashed with its OpenGL OSD when the areas were set again.
+
 2026-11-10: Version 1.4.4
 
 - Fix out-of-range string accesses: VDR built with -D_GLIBCXX_ASSERTIONS aborted
