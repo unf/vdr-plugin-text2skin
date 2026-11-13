@@ -1,6 +1,12 @@
 VDR Plugin 'text2skin' Revision History
 ---------------------------------------
 
+2026-11-13: Version 1.4.6
+
+- Register the translations of a skin under the right text domain: since a fix
+  for a C++11 compiler warning in 2017 the domain contained spaces and no
+  translation of a skin (trans()) was found.
+
 2026-11-13: Version 1.4.5
 
 - A display that switches its windows (a message during replay, e.g. "Editing
