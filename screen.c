@@ -29,11 +29,20 @@ eOsdError cText2SkinScreen::SetAreas(const tArea *Areas, int NumAreas)
 		return oeTooManyAreas;
 
 	// called again when a display switches its windows (replay message)
+	bool again = mNumRegions > 0 || mCanvas != NULL;
 	for (int i = 0; i < mNumRegions; ++i)
 		delete mRegions[i];
 	mNumRegions = 0;
 	DELETENULL(mCanvas);
 	mOrigin = cPoint(0, 0);
+
+	// VDR allows SetAreas() again on the same OSD, but not every output device
+	// copes with it (softhddevice kept the deleted pixmaps and crashed). New
+	// windows get a new OSD, which every output device handles.
+	if (again && !mOffScreen) {
+		DELETENULL(mOsd);
+		mOsd = cOsdProvider::NewOsd(0, 0);
+	}
 
 	// A skin asks for true colour with bpp="32" on all windows of a display.
 	// VDR handles true colour as a single area, so it covers all windows.
