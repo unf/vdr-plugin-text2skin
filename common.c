@@ -130,6 +130,50 @@ static void CopyComponents(tComponents &Dest, const cComponents *Components)
 	}
 }
 
+// Service "GetPoster" of a scraper plugin (tvscraper, scraper2vdr). The data
+// structures must have the same layout as in their services.h.
+namespace {
+class cScraperMedia {
+public:
+	cScraperMedia(void): width(0), height(0) {}
+	std::string path;
+	int width;
+	int height;
+};
+
+class cScraperGetPoster {
+public:
+	cScraperGetPoster(void): event(NULL), recording(NULL) {}
+	const cEvent *event;
+	const cRecording *recording;
+	cScraperMedia poster;
+};
+}
+
+// Path of the poster (or EPG image) of an event or a recording, "" if there is
+// none or no scraper plugin. Called where VDR hands over the event or
+// recording, the pointers are valid there.
+static std::string ScraperPoster(const cEvent *Event, const cRecording *Recording)
+{
+	static cPlugin *scraper = NULL;
+	static bool searched = false;
+	if (!searched) {
+		scraper = cPluginManager::GetPlugin("tvscraper");
+		if (scraper == NULL)
+			scraper = cPluginManager::GetPlugin("scraper2vdr");
+		searched = true;
+	}
+	if (scraper == NULL || (Event == NULL && Recording == NULL))
+		return "";
+
+	cScraperGetPoster call;
+	call.event = Event;
+	call.recording = Recording;
+	if (!scraper->Service("GetPoster", &call))
+		return "";
+	return call.poster.path;
+}
+
 void tEventData::Set(const cEvent *Event)
 {
 	*this = tEventData();
@@ -148,6 +192,7 @@ void tEventData::Set(const cEvent *Event)
 	eventID     = Event->EventID();
 	channelID   = Event->ChannelID();
 	CopyComponents(components, Event->Components());
+	poster      = ScraperPoster(Event, NULL);
 }
 
 void tRecordingData::Set(const cRecording *Recording)
@@ -172,6 +217,7 @@ void tRecordingData::Set(const cRecording *Recording)
 		channelID   = info->ChannelID();
 		CopyComponents(components, info->Components());
 	}
+	poster          = ScraperPoster(NULL, Recording);
 }
 
 // stream_content of the component descriptor (ETSI EN 300 468), as VDR

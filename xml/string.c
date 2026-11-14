@@ -50,7 +50,9 @@ static const char *Tokens[__COUNT_TOKEN__] = {
 	"RecordingVideoAR", "RecordingSize", "RecordingLength", "RecordingCuttedLength", "OsdWidth", "OsdHeight",
 	"RecordingLanguageDescription", "ButtonRed", "ButtonGreen",
 	"ButtonYellow", "ButtonBlue", "CanScrollUp", "CanScrollDown",
-	"KeyMacroRed", "KeyMacroGreen", "KeyMacroYellow", "KeyMacroBlue"
+	"KeyMacroRed", "KeyMacroGreen", "KeyMacroYellow", "KeyMacroBlue",
+	"SkinOption",
+	"PresentPoster", "FollowingPoster", "RecordingPoster", "ReplayPoster"
 };
 
 std::string txToken::Token(const txToken &Token)

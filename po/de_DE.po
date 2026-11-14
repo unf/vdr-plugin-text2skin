@@ -64,6 +64,9 @@ msgstr "Max. Größe des Bildspeichers"
 msgid "Max. characters per line"
 msgstr "Max. Zeichenzahl pro Linie"
 
+msgid "Options of skin '%s'"
+msgstr "Optionen des Skins '%s'"
+
 msgid "Tabulator width"
 msgstr "Tabulator Breite"
 

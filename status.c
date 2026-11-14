@@ -327,6 +327,11 @@ cxType cText2SkinStatus::GetTokenData(const txToken &Token)
 		       ? (cxType)mReplay.name
 		       : (cxType)false;
 
+	case tReplayPoster:
+		return mReplay.valid && !mReplay.poster.empty()
+		       ? (cxType)mReplay.poster
+		       : (cxType)false;
+
 	case tReplayDateTime:
 		return mReplay.valid
 		       ? (cxType)TimeType(mReplay.start, Token.Attrib.Text)

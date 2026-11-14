@@ -938,6 +938,8 @@ cxType cText2SkinRender::GetTokenData(const txToken &Token)
 	case tKeyMacroYellow: return KeyMacroCaption(kYellow);
 	case tKeyMacroBlue:   return KeyMacroCaption(kBlue);
 
+	case tSkinOption:     return mSkin->OptionValue(Token.Attrib.Text);
+
 	case tAudioTrack:    {
 			cDevice *dev = cDevice::PrimaryDevice();
 			const tTrackId *Track = dev->GetTrack(dev->GetCurrentAudioTrack());

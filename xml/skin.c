@@ -2,6 +2,7 @@
 
 #include "xml/skin.h"
 #include "i18n.h"
+#include "setup.h"
 #include <vdr/tools.h>
 #include <vdr/config.h>
 #include <vdr/device.h>
@@ -118,4 +119,63 @@ std::string cxSkin::Translate(const std::string &Text)
 	if (mI18n != NULL)
 		return mI18n->Translate(Text);
 	return Text;
+}
+
+// --- txOption ---------------------------------------------------------------
+
+bool txOption::ParseType(const std::string &Text)
+{
+	if      (Text == "bool")   Type = oBool;
+	else if (Text == "choice") Type = oChoice;
+	else if (Text == "string") Type = oString;
+	else return false;
+	return true;
+}
+
+bool txOption::ParseValues(const std::string &Text)
+{
+	Values.clear();
+	std::string::size_type start = 0, pos;
+	do {
+		pos = Text.find(',', start);
+		std::string value = Text.substr(start, pos == std::string::npos ? std::string::npos : pos - start);
+		if (value.empty())
+			return false;
+		Values.push_back(value);
+		start = pos + 1;
+	} while (pos != std::string::npos);
+	return true;
+}
+
+// Brings a stored value into the form of the option type: "1"/"0" for bool,
+// one of the values for choice (else the default), the text for string.
+std::string txOption::Normalize(const std::string &Value) const
+{
+	switch (Type) {
+	case oBool:
+		return (Value != "" && Value != "0") ? "1" : "0";
+
+	case oChoice:
+		for (uint i = 0; i < Values.size(); ++i) {
+			if (Values[i] == Value)
+				return Value;
+		}
+		return Value == Default ? (Values.empty() ? "" : Values[0]) : Normalize(Default);
+
+	default:
+		return Value;
+	}
+}
+
+cxType cxSkin::OptionValue(const std::string &Name) const
+{
+	for (txOptions::const_iterator it = mOptions.begin(); it != mOptions.end(); ++it) {
+		if (it->Name == Name) {
+			std::string value = it->Normalize(Text2SkinOptions.Get(mName, Name, it->Default));
+			if (it->Type == txOption::oBool)
+				return (cxType)(value == "1");
+			return (cxType)value;
+		}
+	}
+	return false;
 }
