@@ -1,6 +1,28 @@
 VDR Plugin 'text2skin' Revision History
 ---------------------------------------
 
+2026-11-14: Version 2.0.0
+
+- Skin format 1.2: options of a skin (<options>, <option>, token
+  {SkinOption:<name>}). The user sets them in the setup menu of text2skin,
+  section "Options of skin '<name>'", they take effect at once and are stored
+  in setup.conf. Only values different from the default are stored. Options
+  replace the build-time settings of the past (sed in a Makefile).
+- Tokens {KeyMacroRed}, {KeyMacroGreen}, {KeyMacroYellow} and {KeyMacroBlue}:
+  the captions of the color keys in keymacros.conf, a plugin by the name of
+  its main menu entry.
+- Tokens {PresentPoster}, {FollowingPoster}, {RecordingPoster} and
+  {ReplayPoster}: the poster of an event or a recording from a scraper plugin
+  (tvscraper, scraper2vdr).
+- Remove the Imlib2 image backend: it stretched scaled images instead of
+  keeping their aspect ratio and leaked memory. GraphicsMagick and ImageMagick
+  remain.
+- Remove the converters of the skin formats 0.0.2 and 0.0.3 (contrib/).
+- Documentation: options and poster tokens, RelaxNG schema text2skin-1.2.rng,
+  new chapter "One skin for all OSD sizes" (abs1920x1080 as base), the skin
+  Makefile example and the tutorial for skin format 1.2, function plugin().
+- Translations of the setup menu (de, fi, it).
+
 2026-11-13: Version 1.4.6
 
 - Register the translations of a skin under the right text domain: since a fix
