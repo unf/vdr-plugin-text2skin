@@ -27,12 +27,10 @@ Voraussetzungen:
 VDR 2.4.0 oder neuer.
 
 Um andere Bildformate als einfaches XPM zu laden, brauchen Sie eine
-Grafikbibliothek. Es werden drei Bibliotheken unterstützt, aus der Sie eine
-zu benutzende wählen können. Dies sind GraphicsMagick, ImageMagick oder
-Imlib2, wobei GraphicsMagick standardmäßig herangezogen wird. Sie können mit
-der Makefile-Variable IMAGELIB beeinflussen, welche Bibliothek (wenn überhaupt
-eine) genutzt werden soll. Hier ist eine Übersicht über Möglichkeiten und
-Nachteile jeder möglichen Lösung:
+Grafikbibliothek. Unterstützt werden GraphicsMagick und ImageMagick, wobei
+GraphicsMagick standardmäßig herangezogen wird. Sie können mit der
+Makefile-Variable IMAGELIB beeinflussen, welche Bibliothek (wenn überhaupt
+eine) genutzt werden soll:
 
 Keine Bibliothek
  - Sie können nur XPM Dateien laden
@@ -40,12 +38,10 @@ Keine Bibliothek
 
 GraphicsMagick oder ImageMagick
  + Sie können viele verschiedene Bildformate laden einschließlich Animationen
+ + Bilder werden mit einem Lanczos-Filter skaliert und behalten ihr
+   Seitenverhältnis
  - ImageMagick nur bis Version 6, die Magick++-Schnittstelle von Version 7
    ist eine andere
-
-Imlib2
- + Sie können viele verschiedene Bildformate laden
- - STÜRZT AB, WENN ES ZUSAMMEN MIT DEM GRAPHTFT-PLUGIN ZUM EINSATZ KOMMT!
 
 HINWEIS: Obwohl die Handbücher von ImageMagick und GraphicsMagick behaupten,
 dass die hier benutzte Bibliothek Magick++ integraler Bestandteil der Quellen
@@ -87,10 +83,10 @@ Skin muss mindestens eine Datei enthalten, die denselben Namen trägt, aber mit
 der Endung ".skin".
 
 Beispiel (das Skin heisst myskin):
-/video0/plugins/text2skin/
-/video0/plugins/text2skin/myskin/
-/video0/plugins/text2skin/msykin/msykin.skin
-/video0/plugins/text2skin/myskin/channeldisplay.png
+/var/lib/vdr/plugins/text2skin/
+/var/lib/vdr/plugins/text2skin/myskin/
+/var/lib/vdr/plugins/text2skin/myskin/myskin.skin
+/var/lib/vdr/plugins/text2skin/myskin/channeldisplay.png
 
 Die anderen Dateien in dem Skin-Ordner sind weitere Beschreibungsdateien (für
 Farben und Übersetzungen) sowie Bilder, Logos und Symbole.
