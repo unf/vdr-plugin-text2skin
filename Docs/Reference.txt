@@ -3,7 +3,7 @@ REFERENCE text2skin-skins
 Thomas Wehrspann
 
 17.12.2004
-Last update 23.05.2017
+Last update 14.11.2026
 
 This is a short reference of the XML based skin format of the
 text2skin-plugin.
@@ -53,6 +53,7 @@ Table of Contents
 4.2 color
 4.3 font
 4.4 refresh
+5. One skin for all OSD sizes
 
 1. Elements
 ===========
@@ -705,9 +706,11 @@ An option of the skin, inside <options>.
 -----------------------------------------------------------------------------
 | ReplayIsLoop           |                           | True, if replay is in loop mode (currently only in mp3 mode)
 -----------------------------------------------------------------------------
-| OsdWidth               |                           | Width of the OSD
+| OsdWidth               |                           | Width of the OSD, with abs1280x720 and
+|                        |                           | abs1920x1080 the real, scaled width
+|                        |                           | (e.g. 1280, 1920 or 3840), see chapter 5
 -----------------------------------------------------------------------------
-| OsdHeight              |                           | Height of the OSD
+| OsdHeight              |                           | Height of the OSD, like OsdWidth
 -----------------------------------------------------------------------------
 | KeyMacroRed            | (keymacros.conf)          | Caption of the key macro of the red key:
 |                        |                           | the main menu entry of a plugin (@plugin)
@@ -1317,3 +1320,42 @@ selective update of changed objects.
 |           |   - list               | redraw if list item or current item is changed
 |           |   - scroll             | redraw when a scroll event occurred
 -----------------------------------------------------------------------------
+
+
+5. One skin for all OSD sizes
+=============================
+
+A skin with screenBase="abs1920x1080" is described on a grid of 1920x1080
+skin pixels and drawn at the real size of the OSD: positions, sizes, fonts
+and images are scaled, by 2.0 on a 3840x2160 OSD and by 0.67 on 1280x720.
+One skin file covers all OSD sizes, they need no separate treatment. This is
+the recommended base for new skins.
+
+abs1280x720 is scaled the same way, but by 3.0 on 3840x2160, and its grid is
+coarser. relative and absolute are not scaled.
+
+Hints:
+
+- Use bpp="32" for all windows of a display. Only then the skin is drawn in
+  true colour and images are scaled with a Lanczos filter.
+
+- Images are scaled from their file to the box given by x1, x2, y1 and y2.
+  An image file larger than its box loses nothing when it is scaled down, so
+  images made for 3840x2160 (twice the size of their box) stay sharp on every
+  OSD.
+
+- Images keep their aspect ratio and are placed at the top left of their
+  box. Where pictures of another shape may appear (e.g. portrait posters of
+  {PresentPoster}), draw a background below the image.
+
+- Below 1920x1080 the skin is scaled down. Lines of a single skin pixel and
+  small details drawn with rectangles may get lost there, lines of two skin
+  pixels survive.
+
+- Where an OSD size really needs a variant of its own, {OsdWidth} gives the
+  real width of the OSD for a condition:
+
+  <block condition="lt({OsdWidth},1920)"> ... </block>
+
+  Keep such variants the exception. The windows of a display can't depend on
+  the OSD size, and the coordinates stay in the 1920x1080 grid.
