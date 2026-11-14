@@ -176,8 +176,13 @@ enum exToken {
 	tButtonBlue,
 	tCanScrollUp,
 	tCanScrollDown,
+	// caption of the key macros of the color keys (keymacros.conf)
+	tKeyMacroRed,
+	tKeyMacroGreen,
+	tKeyMacroYellow,
+	tKeyMacroBlue,
 
-#define __COUNT_TOKEN__ (tCanScrollDown + 1)
+#define __COUNT_TOKEN__ (tKeyMacroBlue + 1)
 };
 
 enum exAttrib {

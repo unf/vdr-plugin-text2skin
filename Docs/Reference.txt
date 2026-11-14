@@ -641,6 +641,18 @@ Defines an item for the list.
 -----------------------------------------------------------------------------
 | OsdHeight              |                           | Height of the OSD
 -----------------------------------------------------------------------------
+| KeyMacroRed            | (keymacros.conf)          | Caption of the key macro of the red key:
+|                        |                           | the main menu entry of a plugin (@plugin)
+|                        |                           | or the translated name of the key it
+|                        |                           | calls (e.g. "Recordings"). False if the
+|                        |                           | key has no macro.
+-----------------------------------------------------------------------------
+| KeyMacroGreen          | (keymacros.conf)          | Like KeyMacroRed for the green key
+-----------------------------------------------------------------------------
+| KeyMacroYellow         | (keymacros.conf)          | Like KeyMacroRed for the yellow key
+-----------------------------------------------------------------------------
+| KeyMacroBlue           | (keymacros.conf)          | Like KeyMacroRed for the blue key
+-----------------------------------------------------------------------------
 | ReplayName             |                           | Name of the current replay
 -----------------------------------------------------------------------------
 | ReplayDateTime         |                           | Start time of the current replay
