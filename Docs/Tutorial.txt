@@ -5,7 +5,7 @@ Sascha Volkenandt
 english translation by Thomas Wehrspann
 
 16.12.2004
-Last update 13.07.2009
+Last update 14.11.2026
 
 Table of Contents
  1. General Structure of XML Documents
@@ -21,6 +21,7 @@ Table of Contents
 11. Scaling of Images
 12. Colors
 13. True-type Fonts
+14. Options of a Skin
 
 
 1. General Structure of XML Documents
@@ -67,15 +68,21 @@ Each skin file (ending with the extension ".skin") starts with the XML
 declaration (see above) followed by the root element <skin>. This element has
 three attributes which must be specified
 
-* version    - Version of the skin format (current: "1.0")
+* version    - Version of the skin format (current: "1.2", needs text2skin 2.0)
 * name       - Name of the skin
-* screenBase - Specifies, if the skin is drawn "relative" to the VDR setup of
-               "absolute" to the coordinates 720x576.
+* screenBase - The coordinate system of the skin: "abs1920x1080" describes the
+               skin on a grid of 1920x1080 pixels, text2skin scales it to the
+               real size of the OSD (3840x2160, 1920x1080, 1280x720, ...).
+               Older bases are "abs1280x720", "relative" (to the OSD area of
+               the VDR setup) and "absolute" (720x576, not scaled).
 
   <?xml version="1.0"?>
-  <skin version="1.0" name="brushed Aluminium" screenBase="relative">
+  <skin version="1.2" name="MySkin" screenBase="abs1920x1080">
     ...
   </skin>
+
+New skins should use "abs1920x1080": one skin file then covers all OSD sizes,
+see chapter 5 of the reference ("One skin for all OSD sizes").
 
 
 3. Structure of the individual Sections
@@ -93,12 +100,14 @@ actual section
 * menu
 
 Each <display> definition starts with the definition of drawing areas, so
-called windows. The quantity and color depth of windows depends on the output
-device.
+called windows. With bpp="32" in all windows of a display the display is drawn
+in true colour: images keep their full colours and alpha channel, texts are
+anti-aliased against the real background. Without a true colour OSD text2skin
+falls back to 256 colours.
 
   <display id="replayInfo">
-    <window x1="0" x2="619" y1="-113" y2="-84" bpp="4"/>
-    <window x1="20" x2="99" y1="-83" y2="-44" bpp="4"/>
+    <window x1="0" x2="1919" y1="-170" y2="-126" bpp="32"/>
+    <window x1="30" x2="149" y1="-125" y2="-66" bpp="32"/>
     ...
   </display>
 
@@ -286,11 +295,18 @@ wished, instead of current selected element.
           (e.g. "and({CanScrollUp},{CanScrollDown})" )
 * or    - true, if one parameter is true 
           (e.g. see above)
-* equal - true, if both parameters are true
-* file  - returns the parameter, if the file exists in the skin directory 
+* equal - true, if both parameters are equal
+* ne    - true, if both parameters are not equal
+* gt, ge, lt, le
+        - compare two numbers: greater, greater or equal, less, less or equal
+          (e.g. "lt({OsdWidth},1920)" )
+* file  - returns the parameter, if the file exists in the skin directory
           (e.g. "file('logos/{ChannelName}.png')" )
-* trans - return the translation (i18n) of the parameter, false, if no translation is found 
+* trans - return the translation (i18n) of the parameter, false, if no translation is found
           (e.g. "equal('Kanäle', trans('Channels'))" )
+* plugin - returns the main menu entry of the plugin, or the parameter itself,
+          if the plugin is not loaded or has no main menu entry
+          (e.g. "equal({MenuCurrent:clean},plugin('epgsearch'))" )
 
 Normally strings in function are quoted in quotation marks, only if the simply
 consists of a token the quotation marks can be omitted.
@@ -299,11 +315,17 @@ consists of a token the quotation marks can be omitted.
 
 11. Scaling of Images
 =====================
-With this function it is possible to scale images independently from the OSD
-settings. This function is activated when the attributes "x1", "x2", "y1" and
-"y2" with their relative readings are used instead of "x" and "y" (which
-disable this function).  The attribute "color" specifies the maximum amount of
-colors the must have after scaling.
+An image given with the attributes "x1", "x2", "y1" and "y2" is scaled to that
+box, an image given with "x" and "y" keeps its size (in skin pixels, the skin
+itself is still scaled to the OSD). Scaled images keep their aspect ratio and
+are placed at the top left of their box; where pictures of another shape may
+appear (e.g. portrait posters), draw a background below the image. In true
+colour the images are scaled with a Lanczos filter, so images supplied larger
+than their box (e.g. for a 3840x2160 OSD) stay sharp on every OSD size. In a
+palette display the attribute "colors" specifies the maximum amount of colors
+the image must have after scaling.
+
+  <image x1="1551" x2="1880" y1="95" y2="340" condition="{PresentPoster}" path="{PresentPoster}" />
 
 
 12. Colors
@@ -347,3 +369,26 @@ or with True Type fonts with the desired size and if desirable width
 
   font="Sans Serif@size[,width]"
   font="Monospaced:Bold@size[,width]"
+
+
+14. Options of a Skin
+=====================
+Instead of build-time settings a skin can offer options (skin format 1.2). The
+user sets them in the setup menu of text2skin, they take effect at once and
+are stored in VDR's setup.conf. The options are declared once, before the
+first <display>, and read with the token {SkinOption:<name>}:
+
+  <options>
+    <option name="ChannelLogos" type="choice" values="right,left,none" default="right" title="Channel logos"/>
+    <option name="LogoPath" type="string" default="/var/lib/vdr/channellogos" title="Path of the channel logos"/>
+    <option name="EpgImages" type="bool" default="1" title="EPG images (scraper)"/>
+  </options>
+
+  <block condition="equal({SkinOption:ChannelLogos},'left')">
+    <image x1="52" x2="312" y1="881" y2="1027" path="{SkinOption:LogoPath}/{ChannelName}.png"/>
+  </block>
+
+Titles and values are translated in the po files of the skin. A relative path
+is taken from the folder of the skin. See 1.17 and 1.18 of the reference for
+all details, Docs/Makefile.example puts the titles and values into the
+translation template.

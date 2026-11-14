@@ -48,6 +48,7 @@ Table of Contents
 3.9 le
 3.10 file
 3.11 trans
+3.12 plugin
 4. Attributes
 4.1 arc
 4.2 color
@@ -285,6 +286,10 @@ Display an image.
 
  <image x="0" y="-70" path="Aluminium_volumebar.png" />
  <image x="585" y="138" condition="{CanScrollUp}" path="symbols/arrowup.xpm" color="#AFFFFF00" />
+
+A scaled image (x1, x2, y1, y2) keeps its aspect ratio and is placed at the
+top left of its box. Where pictures of another shape may appear (e.g.
+portrait posters), draw a background below the image.
 
 
 1.8 <text>
@@ -1221,6 +1226,13 @@ Returns the parameter, if the file exists in the skin directory.
 Returns the translation (i18n) of the parameter or false, if no translation is found.
 
  equal('Kanäle', trans('Channels'))
+
+3.12 plugin
+-----------
+Returns the main menu entry of the plugin, or the parameter itself, if the
+plugin is not loaded or has no main menu entry.
+
+ equal({MenuCurrent:clean},plugin('epgsearch'))
 
 
 4. Attributes
