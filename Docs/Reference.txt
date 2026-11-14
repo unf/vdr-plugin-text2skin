@@ -26,6 +26,8 @@ Table of Contents
 1.14 <block>
 1.15 <list>
 1.16 <item>
+1.17 <options>
+1.18 <option>
 2. Token
 2.1 Common
 2.2 Channel Display
@@ -62,7 +64,8 @@ container.
 -----------------------------------------------------------------------------
 | Attribute  | Value          | Description
 =============================================================================
-| version    | VERSION        | Version of the skin format ("1.0" or "1.1")
+| version    | VERSION        | Version of the skin format ("1.0", "1.1" or "1.2")
+|            |                | 1.2 is needed for <options> (text2skin >= 2.0)
 -----------------------------------------------------------------------------
 | name       | NAME           | Name to display in the VDR-OSD
 -----------------------------------------------------------------------------
@@ -71,6 +74,11 @@ container.
 |            | * absolute     | Draw the skin absolute to an area of 720x576
 |            | * abs1280x720  | Draw the skin absolute to an area of 1280x720
 |            | * abs1920x1080 | Draw the skin absolute to an area of 1920x1080
+|            |                | abs1280x720 and abs1920x1080 are scaled to the
+|            |                | real OSD size (e.g. factor 2.0 on a 3840x2160
+|            |                | OSD, 0.67 on 1280x720): positions, sizes, fonts
+|            |                | and images. New skins should be designed for
+|            |                | abs1920x1080, one skin then fits all OSD sizes.
 -----------------------------------------------------------------------------
 
  <?xml version="1.0"?>
@@ -599,6 +607,66 @@ Defines an item for the list.
  </list>
 
 
+1.17 <options>
+--------------
+Container for the options of a skin (skin format 1.2). Options replace the
+build-time settings of the past (sed in a Makefile, a rebuild for every
+change): the user sets them in the setup menu of text2skin, section
+"Options of skin '<name>'", they take effect at once and are stored in
+setup.conf as "text2skin.<skin>.<option> = <value>". Only values different
+from the default are stored. The skin reads them with the token
+{SkinOption:<name>} (see 2.1). Optional, at most once, before the first
+<display>.
+
+ <?xml version="1.0"?>
+ <skin version="1.2" name="Example" screenBase="abs1920x1080">
+   <options>
+     <option name="ChannelLogo" type="bool" default="0" title="Channel logo"/>
+     <option name="LogoPath" type="string" default="/var/lib/vdr/channellogos"
+             title="Path of the channel logos"/>
+     <option name="Clock" type="choice" values="digital,text,none"
+             default="digital" title="Clock"/>
+   </options>
+   <display id="channelInfo">
+     .
+     <image x1="20" x2="120" y1="20" y2="95"
+            condition="and({SkinOption:ChannelLogo},file('{SkinOption:LogoPath}/{ChannelName}.png'))"
+            path="{SkinOption:LogoPath}/{ChannelName}.png"/>
+     <text x1="-200" x2="-20" y1="20" y2="60"
+           condition="equal({SkinOption:Clock},'digital')">{DateTime:%H\:%M}</text>
+     .
+   </display>
+ </skin>
+
+
+1.18 <option>
+-------------
+An option of the skin, inside <options>.
+
+-----------------------------------------------------------------------------
+| Attribute  | Value          | Description
+=============================================================================
+| name       | NAME           | Name of the option (letters, digits), used in
+|            |                | {SkinOption:NAME} and in setup.conf
+-----------------------------------------------------------------------------
+| type       | * bool         | yes/no, the token delivers true or false
+|            |                | (default)
+|            | * choice       | one of the values in "values", the token
+|            |                | delivers the value
+|            | * string       | free text, e.g. a path
+-----------------------------------------------------------------------------
+| title      | STRING         | Text in the setup menu, translated with the
+|            |                | translations of the skin (default: name)
+-----------------------------------------------------------------------------
+| default    | STRING         | Value as long as the user has not changed it
+|            |                | (bool: "1" or "0", choice: one of the values)
+-----------------------------------------------------------------------------
+| values     | STRING         | Values of a choice, separated by ",". The
+|            |                | values are translated for the setup menu, the
+|            |                | token delivers the untranslated value.
+-----------------------------------------------------------------------------
+
+
 2. Token
 ========
 2.1 Common
@@ -653,7 +721,15 @@ Defines an item for the list.
 -----------------------------------------------------------------------------
 | KeyMacroBlue           | (keymacros.conf)          | Like KeyMacroRed for the blue key
 -----------------------------------------------------------------------------
+| SkinOption             | (skin format 1.2)         | Value of an option of the skin (see 1.17),
+|                        |                           |  Attribute: name of the option, e.g.
+|                        |                           |  {SkinOption:ChannelLogo}
+-----------------------------------------------------------------------------
 | ReplayName             |                           | Name of the current replay
+-----------------------------------------------------------------------------
+| ReplayPoster           | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | current replay, false if none
 -----------------------------------------------------------------------------
 | ReplayDateTime         |                           | Start time of the current replay
 -----------------------------------------------------------------------------
@@ -776,6 +852,14 @@ Defines an item for the list.
 | FollowingShortText     |                           | Short text/episode of following title
 -----------------------------------------------------------------------------
 | FollowingDescription   |                           | Description of following title
+-----------------------------------------------------------------------------
+| PresentPoster          | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | current event, false if none
+-----------------------------------------------------------------------------
+| FollowingPoster        | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | next event, false if none
 -----------------------------------------------------------------------------
 | FollowingHasTimer      |                           | True, if the following title is targeted by a timer
 -----------------------------------------------------------------------------
@@ -952,6 +1036,10 @@ Defines an item for the list.
 -----------------------------------------------------------------------------
 | RecordingName          |                           | Name of the current recording
 -----------------------------------------------------------------------------
+| RecordingPoster        | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | current recording, false if none
+-----------------------------------------------------------------------------
 | RecordingDateTime      |                           | Start time of the current recording
 -----------------------------------------------------------------------------
 | RecordingTitle         |                           | Title/heading of the current recording
@@ -1025,6 +1113,10 @@ Defines an item for the list.
 | PresentVideoAR         |                           | Video format (aspect ratio) of the current title ("4:3" or "16:9")
 -----------------------------------------------------------------------------
 | PresentEventID         |                           | Event number of the current title
+-----------------------------------------------------------------------------
+| PresentPoster          | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | current event, false if none
 -----------------------------------------------------------------------------
 | ChannelName            |                           | Channel name
 -----------------------------------------------------------------------------
