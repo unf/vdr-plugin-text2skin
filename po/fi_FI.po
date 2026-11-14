@@ -74,7 +74,7 @@ msgstr "leveä"
 
 #, c-format
 msgid "Options of skin '%s'"
-msgstr ""
+msgstr "Ulkoasun '%s' asetukset"
 
 msgid "Flushing image cache..."
 msgstr "Tyhjennetään välimuistia..."

@@ -76,7 +76,7 @@ msgstr ""
 
 #, c-format
 msgid "Options of skin '%s'"
-msgstr ""
+msgstr "Opzioni della skin '%s'"
 
 msgid "Flushing image cache..."
 msgstr "Svuotamento cache immagini..."
