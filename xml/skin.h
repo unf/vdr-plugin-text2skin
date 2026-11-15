@@ -4,9 +4,11 @@
 #define VDR_TEXT2SKIN_XML_SKIN_H
 
 #include "xml/display.h"
+#include "xml/type.h"
 #include <vdr/osd.h>
 #include <map>
 #include <string>
+#include <vector>
 
 // --- cxSkin -----------------------------------------------------------------
 
@@ -52,6 +54,33 @@ private:
 	int mMinor;
 };
 
+// --- txOption ---------------------------------------------------------------
+
+// An option a skin declares in <options>. The value is set in the setup menu
+// of text2skin, stored in setup.conf as text2skin.<Skin>.<Name> and read in
+// the skin with the token {SkinOption:<Name>}.
+struct txOption {
+	enum eType {
+		oBool,
+		oChoice,
+		oString
+	};
+
+	std::string              Name;
+	eType                    Type;
+	std::string              Title;
+	std::string              Default;
+	std::vector<std::string> Values;
+
+	txOption(void): Type(oBool) {}
+
+	bool ParseType(const std::string &Text);
+	bool ParseValues(const std::string &Text);
+	std::string Normalize(const std::string &Value) const;
+};
+
+typedef std::vector<txOption> txOptions;
+
 class cxSkin {
 	friend bool xStartElem(const std::string &name, std::map<std::string,std::string> &attrs);
 	friend bool xEndElem(const std::string &name);
@@ -78,6 +107,7 @@ private:
 	cxVersion        mVersion;
 
 	cxDisplays       mDisplays;
+	txOptions        mOptions;
 
 	cText2SkinI18n  *mI18n; // TODO: should move here completely
 	cText2SkinTheme *mTheme;
@@ -99,6 +129,10 @@ public:
 	const std::string &Name(void)       const { return mName; }
 	const std::string &Title(void)      const { return mTitle; }
 	const cxVersion   &Version(void)    const { return mVersion; }
+	const txOptions   &Options(void)    const { return mOptions; }
+
+	// current value of an option (setup.conf or default of the skin)
+	cxType             OptionValue(const std::string &Name) const;
 
 	// functions for object classes to obtain dynamic item information
 	std::string        Translate(const std::string &Text);

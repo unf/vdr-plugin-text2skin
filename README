@@ -26,10 +26,9 @@ Prerequisites:
 VDR 2.4.0 or newer.
 
 For loading images in format other than simple XPM, you will need an image
-library. You can choose between three supported libraries, GraphicsMagick,
-ImageMagick or Imlib2, of which the first one is the default. You can
-specify which library to use (if any) using the IMAGELIB variable in Makefile.
-Here is an overview of the advantages and drawbacks of each alternative:
+library. You can choose between GraphicsMagick and ImageMagick, of which the
+first one is the default. You can specify which library to use (if any) using
+the IMAGELIB variable in Makefile:
 
 No library
  - you can only load XPM files
@@ -37,11 +36,8 @@ No library
 
 GraphicsMagick and ImageMagick
  + you can load many different image types including animations
+ + images are scaled with a Lanczos filter and keep their aspect ratio
  - ImageMagick only up to version 6, the Magick++ API of version 7 differs
-
-Imlib2
- + you can load many different image types
- - CRASHES WHEN USED TOGETHER WITH THE GRAPHTFT-PLUGIN!
 
 HINT: Although the manuals of ImageMagick and GraphicsMagick claim that the
 used library Magick++ is part of the source distribution, some binary
@@ -80,10 +76,10 @@ same names as the skins residing in them.  Each skin must at least have a file
 carrying the same name, but ending in ".skin".
 
 Example (the Skin is called myskin):
-/video0/plugins/text2skin/
-/video0/plugins/text2skin/myskin/
-/video0/plugins/text2skin/msykin/msykin.skin
-/video0/plugins/text2skin/myskin/channeldisplay.png
+/var/lib/vdr/plugins/text2skin/
+/var/lib/vdr/plugins/text2skin/myskin/
+/var/lib/vdr/plugins/text2skin/myskin/myskin.skin
+/var/lib/vdr/plugins/text2skin/myskin/channeldisplay.png
 
 The other files inside the skin-folder are additional description files (for
 Themeing and Translation), images, logos and symbols.

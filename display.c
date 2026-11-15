@@ -237,6 +237,16 @@ cxType cText2SkinDisplayChannel::GetTokenData(const txToken &Token)
 		       ? (cxType)mFollowing.title
 		       : (cxType)false;
 
+	case tPresentPoster:
+		return mPresent.valid && !mPresent.poster.empty()
+		       ? (cxType)mPresent.poster
+		       : (cxType)false;
+
+	case tFollowingPoster:
+		return mFollowing.valid && !mFollowing.poster.empty()
+		       ? (cxType)mFollowing.poster
+		       : (cxType)false;
+
 	case tFollowingShortText:
 		return mFollowing.valid
 		       ? (cxType)mFollowing.shortText
@@ -1178,6 +1188,11 @@ cxType cText2SkinDisplayMenu::GetTokenData(const txToken &Token)
 		       ? (cxType)EventType(mEvent.eventID)
 		       : (cxType)false;
 
+	case tPresentPoster:
+		return mEvent.valid && !mEvent.poster.empty()
+		       ? (cxType)mEvent.poster
+		       : (cxType)false;
+
 	case tHasVPS:
 	case tChannelHasVPS:
 		return mEvent.valid && mEvent.vps != 0;
@@ -1218,6 +1233,11 @@ cxType cText2SkinDisplayMenu::GetTokenData(const txToken &Token)
 	case tRecordingName:
 		return mRecording.valid
 		       ? (cxType)mRecording.name
+		       : (cxType)false;
+
+	case tRecordingPoster:
+		return mRecording.valid && !mRecording.poster.empty()
+		       ? (cxType)mRecording.poster
 		       : (cxType)false;
 
 	case tRecordingFilename:

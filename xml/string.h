@@ -176,8 +176,20 @@ enum exToken {
 	tButtonBlue,
 	tCanScrollUp,
 	tCanScrollDown,
+	// caption of the key macros of the color keys (keymacros.conf)
+	tKeyMacroRed,
+	tKeyMacroGreen,
+	tKeyMacroYellow,
+	tKeyMacroBlue,
+	// value of an option of the skin (attribute: name of the option)
+	tSkinOption,
+	// poster or EPG image of a scraper plugin (path of the image file)
+	tPresentPoster,
+	tFollowingPoster,
+	tRecordingPoster,
+	tReplayPoster,
 
-#define __COUNT_TOKEN__ (tCanScrollDown + 1)
+#define __COUNT_TOKEN__ (tReplayPoster + 1)
 };
 
 enum exAttrib {

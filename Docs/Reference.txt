@@ -3,7 +3,7 @@ REFERENCE text2skin-skins
 Thomas Wehrspann
 
 17.12.2004
-Last update 23.05.2017
+Last update 14.11.2026
 
 This is a short reference of the XML based skin format of the
 text2skin-plugin.
@@ -26,6 +26,8 @@ Table of Contents
 1.14 <block>
 1.15 <list>
 1.16 <item>
+1.17 <options>
+1.18 <option>
 2. Token
 2.1 Common
 2.2 Channel Display
@@ -46,11 +48,13 @@ Table of Contents
 3.9 le
 3.10 file
 3.11 trans
+3.12 plugin
 4. Attributes
 4.1 arc
 4.2 color
 4.3 font
 4.4 refresh
+5. One skin for all OSD sizes
 
 1. Elements
 ===========
@@ -62,7 +66,8 @@ container.
 -----------------------------------------------------------------------------
 | Attribute  | Value          | Description
 =============================================================================
-| version    | VERSION        | Version of the skin format ("1.0" or "1.1")
+| version    | VERSION        | Version of the skin format ("1.0", "1.1" or "1.2")
+|            |                | 1.2 is needed for <options> (text2skin >= 2.0)
 -----------------------------------------------------------------------------
 | name       | NAME           | Name to display in the VDR-OSD
 -----------------------------------------------------------------------------
@@ -71,6 +76,11 @@ container.
 |            | * absolute     | Draw the skin absolute to an area of 720x576
 |            | * abs1280x720  | Draw the skin absolute to an area of 1280x720
 |            | * abs1920x1080 | Draw the skin absolute to an area of 1920x1080
+|            |                | abs1280x720 and abs1920x1080 are scaled to the
+|            |                | real OSD size (e.g. factor 2.0 on a 3840x2160
+|            |                | OSD, 0.67 on 1280x720): positions, sizes, fonts
+|            |                | and images. New skins should be designed for
+|            |                | abs1920x1080, one skin then fits all OSD sizes.
 -----------------------------------------------------------------------------
 
  <?xml version="1.0"?>
@@ -276,6 +286,10 @@ Display an image.
 
  <image x="0" y="-70" path="Aluminium_volumebar.png" />
  <image x="585" y="138" condition="{CanScrollUp}" path="symbols/arrowup.xpm" color="#AFFFFF00" />
+
+A scaled image (x1, x2, y1, y2) keeps its aspect ratio and is placed at the
+top left of its box. Where pictures of another shape may appear (e.g.
+portrait posters), draw a background below the image.
 
 
 1.8 <text>
@@ -599,6 +613,66 @@ Defines an item for the list.
  </list>
 
 
+1.17 <options>
+--------------
+Container for the options of a skin (skin format 1.2). Options replace the
+build-time settings of the past (sed in a Makefile, a rebuild for every
+change): the user sets them in the setup menu of text2skin, section
+"Options of skin '<name>'", they take effect at once and are stored in
+setup.conf as "text2skin.<skin>.<option> = <value>". Only values different
+from the default are stored. The skin reads them with the token
+{SkinOption:<name>} (see 2.1). Optional, at most once, before the first
+<display>.
+
+ <?xml version="1.0"?>
+ <skin version="1.2" name="Example" screenBase="abs1920x1080">
+   <options>
+     <option name="ChannelLogo" type="bool" default="0" title="Channel logo"/>
+     <option name="LogoPath" type="string" default="/var/lib/vdr/channellogos"
+             title="Path of the channel logos"/>
+     <option name="Clock" type="choice" values="digital,text,none"
+             default="digital" title="Clock"/>
+   </options>
+   <display id="channelInfo">
+     .
+     <image x1="20" x2="120" y1="20" y2="95"
+            condition="and({SkinOption:ChannelLogo},file('{SkinOption:LogoPath}/{ChannelName}.png'))"
+            path="{SkinOption:LogoPath}/{ChannelName}.png"/>
+     <text x1="-200" x2="-20" y1="20" y2="60"
+           condition="equal({SkinOption:Clock},'digital')">{DateTime:%H\:%M}</text>
+     .
+   </display>
+ </skin>
+
+
+1.18 <option>
+-------------
+An option of the skin, inside <options>.
+
+-----------------------------------------------------------------------------
+| Attribute  | Value          | Description
+=============================================================================
+| name       | NAME           | Name of the option (letters, digits), used in
+|            |                | {SkinOption:NAME} and in setup.conf
+-----------------------------------------------------------------------------
+| type       | * bool         | yes/no, the token delivers true or false
+|            |                | (default)
+|            | * choice       | one of the values in "values", the token
+|            |                | delivers the value
+|            | * string       | free text, e.g. a path
+-----------------------------------------------------------------------------
+| title      | STRING         | Text in the setup menu, translated with the
+|            |                | translations of the skin (default: name)
+-----------------------------------------------------------------------------
+| default    | STRING         | Value as long as the user has not changed it
+|            |                | (bool: "1" or "0", choice: one of the values)
+-----------------------------------------------------------------------------
+| values     | STRING         | Values of a choice, separated by ",". The
+|            |                | values are translated for the setup menu, the
+|            |                | token delivers the untranslated value.
+-----------------------------------------------------------------------------
+
+
 2. Token
 ========
 2.1 Common
@@ -637,11 +711,33 @@ Defines an item for the list.
 -----------------------------------------------------------------------------
 | ReplayIsLoop           |                           | True, if replay is in loop mode (currently only in mp3 mode)
 -----------------------------------------------------------------------------
-| OsdWidth               |                           | Width of the OSD
+| OsdWidth               |                           | Width of the OSD, with abs1280x720 and
+|                        |                           | abs1920x1080 the real, scaled width
+|                        |                           | (e.g. 1280, 1920 or 3840), see chapter 5
 -----------------------------------------------------------------------------
-| OsdHeight              |                           | Height of the OSD
+| OsdHeight              |                           | Height of the OSD, like OsdWidth
+-----------------------------------------------------------------------------
+| KeyMacroRed            | (keymacros.conf)          | Caption of the key macro of the red key:
+|                        |                           | the main menu entry of a plugin (@plugin)
+|                        |                           | or the translated name of the key it
+|                        |                           | calls (e.g. "Recordings"). False if the
+|                        |                           | key has no macro.
+-----------------------------------------------------------------------------
+| KeyMacroGreen          | (keymacros.conf)          | Like KeyMacroRed for the green key
+-----------------------------------------------------------------------------
+| KeyMacroYellow         | (keymacros.conf)          | Like KeyMacroRed for the yellow key
+-----------------------------------------------------------------------------
+| KeyMacroBlue           | (keymacros.conf)          | Like KeyMacroRed for the blue key
+-----------------------------------------------------------------------------
+| SkinOption             | (skin format 1.2)         | Value of an option of the skin (see 1.17),
+|                        |                           |  Attribute: name of the option, e.g.
+|                        |                           |  {SkinOption:ChannelLogo}
 -----------------------------------------------------------------------------
 | ReplayName             |                           | Name of the current replay
+-----------------------------------------------------------------------------
+| ReplayPoster           | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | current replay, false if none
 -----------------------------------------------------------------------------
 | ReplayDateTime         |                           | Start time of the current replay
 -----------------------------------------------------------------------------
@@ -764,6 +860,14 @@ Defines an item for the list.
 | FollowingShortText     |                           | Short text/episode of following title
 -----------------------------------------------------------------------------
 | FollowingDescription   |                           | Description of following title
+-----------------------------------------------------------------------------
+| PresentPoster          | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | current event, false if none
+-----------------------------------------------------------------------------
+| FollowingPoster        | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | next event, false if none
 -----------------------------------------------------------------------------
 | FollowingHasTimer      |                           | True, if the following title is targeted by a timer
 -----------------------------------------------------------------------------
@@ -940,6 +1044,10 @@ Defines an item for the list.
 -----------------------------------------------------------------------------
 | RecordingName          |                           | Name of the current recording
 -----------------------------------------------------------------------------
+| RecordingPoster        | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | current recording, false if none
+-----------------------------------------------------------------------------
 | RecordingDateTime      |                           | Start time of the current recording
 -----------------------------------------------------------------------------
 | RecordingTitle         |                           | Title/heading of the current recording
@@ -1013,6 +1121,10 @@ Defines an item for the list.
 | PresentVideoAR         |                           | Video format (aspect ratio) of the current title ("4:3" or "16:9")
 -----------------------------------------------------------------------------
 | PresentEventID         |                           | Event number of the current title
+-----------------------------------------------------------------------------
+| PresentPoster          | (scraper plugin)          | Path of the poster or EPG image a scraper
+|                        |                           | plugin (tvscraper, scraper2vdr) has for the
+|                        |                           | current event, false if none
 -----------------------------------------------------------------------------
 | ChannelName            |                           | Channel name
 -----------------------------------------------------------------------------
@@ -1115,6 +1227,13 @@ Returns the translation (i18n) of the parameter or false, if no translation is f
 
  equal('Kanäle', trans('Channels'))
 
+3.12 plugin
+-----------
+Returns the main menu entry of the plugin, or the parameter itself, if the
+plugin is not loaded or has no main menu entry.
+
+ equal({MenuCurrent:clean},plugin('epgsearch'))
+
 
 4. Attributes
 =============
@@ -1213,3 +1332,42 @@ selective update of changed objects.
 |           |   - list               | redraw if list item or current item is changed
 |           |   - scroll             | redraw when a scroll event occurred
 -----------------------------------------------------------------------------
+
+
+5. One skin for all OSD sizes
+=============================
+
+A skin with screenBase="abs1920x1080" is described on a grid of 1920x1080
+skin pixels and drawn at the real size of the OSD: positions, sizes, fonts
+and images are scaled, by 2.0 on a 3840x2160 OSD and by 0.67 on 1280x720.
+One skin file covers all OSD sizes, they need no separate treatment. This is
+the recommended base for new skins.
+
+abs1280x720 is scaled the same way, but by 3.0 on 3840x2160, and its grid is
+coarser. relative and absolute are not scaled.
+
+Hints:
+
+- Use bpp="32" for all windows of a display. Only then the skin is drawn in
+  true colour and images are scaled with a Lanczos filter.
+
+- Images are scaled from their file to the box given by x1, x2, y1 and y2.
+  An image file larger than its box loses nothing when it is scaled down, so
+  images made for 3840x2160 (twice the size of their box) stay sharp on every
+  OSD.
+
+- Images keep their aspect ratio and are placed at the top left of their
+  box. Where pictures of another shape may appear (e.g. portrait posters of
+  {PresentPoster}), draw a background below the image.
+
+- Below 1920x1080 the skin is scaled down. Lines of a single skin pixel and
+  small details drawn with rectangles may get lost there, lines of two skin
+  pixels survive.
+
+- Where an OSD size really needs a variant of its own, {OsdWidth} gives the
+  real width of the OSD for a condition:
+
+  <block condition="lt({OsdWidth},1920)"> ... </block>
+
+  Keep such variants the exception. The windows of a display can't depend on
+  the OSD size, and the coordinates stay in the 1920x1080 grid.

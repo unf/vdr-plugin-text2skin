@@ -16,6 +16,8 @@
 #include <vdr/menu.h>
 #include <vdr/videodir.h>
 #include <vdr/skinclassic.h>
+#include <vdr/keys.h>
+#include <vdr/plugin.h>
 #include <algorithm>
 
 using std::string;
@@ -873,6 +875,23 @@ cxType cText2SkinRender::GetToken(const txToken &Token)
 	return false;
 }
 
+// Caption of the key macro of a color key as defined in keymacros.conf:
+// the main menu entry of a plugin (@plugin) or the translated name of the
+// first key of the macro (e.g. "Recordings"). False if there is no macro.
+static cxType KeyMacroCaption(eKeys Key)
+{
+	const cKeyMacro *macro = KeyMacros.Get(Key);
+	if (macro == NULL || macro->NumKeys() < 2)
+		return false;
+	if (macro->Plugin() != NULL) {
+		cPlugin *plugin = cPluginManager::GetPlugin(macro->Plugin());
+		const char *entry = plugin != NULL ? plugin->MainMenuEntry() : NULL;
+		return entry != NULL ? (cxType)entry : (cxType)false;
+	}
+	const char *name = cKey::ToString(macro->Macro()[1], true);
+	return name != NULL ? (cxType)name : (cxType)false;
+}
+
 cxType cText2SkinRender::GetTokenData(const txToken &Token)
 {
 	switch (Token.Type) {
@@ -913,6 +932,13 @@ cxType cText2SkinRender::GetTokenData(const txToken &Token)
 	case tOsdWidth:      return (cxType)mBaseSize.w;
 
 	case tOsdHeight:     return (cxType)mBaseSize.h;
+
+	case tKeyMacroRed:    return KeyMacroCaption(kRed);
+	case tKeyMacroGreen:  return KeyMacroCaption(kGreen);
+	case tKeyMacroYellow: return KeyMacroCaption(kYellow);
+	case tKeyMacroBlue:   return KeyMacroCaption(kBlue);
+
+	case tSkinOption:     return mSkin->OptionValue(Token.Attrib.Text);
 
 	case tAudioTrack:    {
 			cDevice *dev = cDevice::PrimaryDevice();

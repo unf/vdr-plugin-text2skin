@@ -102,8 +102,30 @@ bool xStartElem(const std::string &name, std::map<std::string,std::string> &attr
 			ATTRIB_MAN_FUNC  ("id",         display->ParseType);
 			ATTRIB_OPT_FUNC  ("refresh",    display->mRefreshDefault.Parse);
 		}
+		else if (name == "options") {
+			// container for <option>, no attributes
+		}
 		else
 			TAG_ERR_REMAIN("skin");
+	}
+	else if (context[context.size() - 1] == "options") {
+		if (name == "option") {
+			txOption option;
+			ATTRIB_MAN_STRING("name",       option.Name);
+			ATTRIB_OPT_FUNC  ("type",       option.ParseType);
+			ATTRIB_OPT_STRING("title",      option.Title);
+			ATTRIB_OPT_STRING("default",    option.Default);
+			ATTRIB_OPT_FUNC  ("values",     option.ParseValues);
+			if (option.Type == txOption::oChoice && option.Values.empty()) {
+				esyslog("ERROR: Text2Skin: Option %s of type choice needs values", option.Name.c_str());
+				return false;
+			}
+			if (option.Type != txOption::oString)
+				option.Default = option.Normalize(option.Default);
+			skin->mOptions.push_back(option);
+		}
+		else
+			TAG_ERR_REMAIN("options");
 	}
 	else if (context[context.size() - 1] == "display"
           || context[context.size() - 1] == "list"

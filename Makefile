@@ -2,7 +2,7 @@
 # Makefile for the text2skin plugin of the Video Disk Recorder
 #
 
-# External image library: graphicsmagick (default), imagemagick, imlib2 or none.
+# External image library: graphicsmagick (default), imagemagick or none.
 # imagemagick needs ImageMagick 6, the Magick++ API of ImageMagick 7 differs.
 IMAGELIB ?= graphicsmagick
 
@@ -76,11 +76,6 @@ else ifeq ($(IMAGELIB), graphicsmagick)
 DEFINES  += -DHAVE_IMAGEMAGICK # the Magick++ code serves both libraries
 INCLUDES += $(shell $(PKG_CONFIG) --cflags GraphicsMagick++)
 LIBS     += $(shell $(PKG_CONFIG) --libs GraphicsMagick++)
-else ifeq ($(IMAGELIB), imlib2)
-DEFINES  += -DHAVE_IMLIB2
-INCLUDES += $(shell $(PKG_CONFIG) --cflags imlib2)
-LIBS     += $(shell $(PKG_CONFIG) --libs imlib2)
-OBJS     += quantize.o
 endif
 
 ifdef DEBUG

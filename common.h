@@ -109,6 +109,7 @@ struct tEventData {
 	tEventID    eventID;
 	tChannelID  channelID;
 	tComponents components;
+	std::string poster;      // image of a scraper plugin (path), "" if none
 
 	tEventData(void): valid(false), startTime(0), endTime(0), vps(0), duration(0),
 	                  hasTimer(false), isRunning(false), eventID(0) {}
@@ -118,7 +119,7 @@ struct tEventData {
 		return valid != b.valid || title != b.title || shortText != b.shortText
 		    || description != b.description || startTime != b.startTime
 		    || duration != b.duration || vps != b.vps || hasTimer != b.hasTimer
-		    || isRunning != b.isRunning;
+		    || isRunning != b.isRunning || poster != b.poster;
 	}
 };
 
@@ -137,6 +138,7 @@ struct tRecordingData {
 	bool        isPesRecording;
 	tChannelID  channelID;
 	tComponents components;
+	std::string poster;      // image of a scraper plugin (path), "" if none
 
 	tRecordingData(void): valid(false), priority(0), lifetime(0), start(0),
 	                      framesPerSecond(DEFAULTFRAMESPERSECOND), isPesRecording(false) {}

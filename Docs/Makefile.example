@@ -2,6 +2,7 @@
 # Makefile for a text2skin skin
 #
 # Copyright (C) 2008, Thomas Günther <tom@toms-cafe.de>
+# Copyright (C) 2026, Frank Neumann <fnu@vdr-portal.de> (skin format 1.2)
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,17 +17,24 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# Copy this file as "Makefile" next to the .skin file of your skin. It puts
+# the texts of trans('...') and the titles and values of the <option>
+# elements into the translation template, builds the translations and
+# installs the skin. Directories come from VDR's pkg-config file.
 
 SKIN = $(basename $(wildcard *.skin))
 MAIL = $(shell sed -ne "s/.*Report-Msgid-Bugs-To: *<\(..*\)>.*/\1/p" po/*.po | head -n1)
 
-### The directory environment:
+### The directory environment (from vdr.pc if available):
 
-DESTDIR ?=
-PREFIX  ?= /usr/local
-CONFDIR  = $(if $(subst /usr,,$(PREFIX)), $(PREFIX))/etc/vdr
-SKINDIR  = $(CONFDIR)/plugins/text2skin/$(SKIN)
-LOCDIR   = $(PREFIX)/share/locale
+PKGCFG     = $(shell pkg-config --variable=$(1) vdr 2>/dev/null)
+VDRCONFDIR ?= $(or $(call PKGCFG,configdir),/var/lib/vdr)
+LOCDIR     ?= $(or $(call PKGCFG,locdir),/usr/share/locale)
+
+DESTDIR   ?=
+SKINDIR    = $(VDRCONFDIR)/plugins/text2skin/$(SKIN)
+THEMESDIR  = $(VDRCONFDIR)/themes
 
 ### The main target:
 
@@ -39,9 +47,12 @@ LOCALEDIR = locale
 I18Npo    = $(notdir $(wildcard $(PODIR)/*.po))
 I18Npot   = $(PODIR)/$(SKIN).pot
 
+# texts to translate: trans('...') in the skin, titles and values of the options
 $(I18Npot): $(SKIN).skin
-	cat $^ | sed -e "s/('/(\"/g;s/')/\")/g" | grep -o "trans([^)]*)" | \
-	xgettext -C --no-wrap --no-location -k -ktrans \
+	@{ sed -e "s/('/(\"/g;s/')/\")/g" $< | grep -o "trans([^)]*)"; \
+	   grep -o '<option [^>]*>' $< | sed -n 's/.* title="\([^"]*\)".*/trans("\1")/p'; \
+	   grep -o '<option [^>]*>' $< | sed -n 's/.* values="\([^"]*\)".*/\1/p' | tr ',' '\n' | sed 's/.*/trans("&")/'; } | \
+	xgettext -C --no-wrap --no-location -k -ktrans --from-code=UTF-8 \
 	         --msgid-bugs-address='<$(MAIL)>' -o $@ -
 
 %.po: $(I18Npot)
@@ -52,7 +63,6 @@ $(LOCALEDIR)/%/LC_MESSAGES/vdr-text2skin-$(SKIN).mo: $(PODIR)/%.po
 	@mkdir -p $(dir $@)
 	msgfmt -c -o $@ $<
 
-.PHONY: i18n
 i18n: $(I18Npo:%.po=$(LOCALEDIR)/%/LC_MESSAGES/vdr-text2skin-$(SKIN).mo)
 
 install-i18n: i18n
@@ -61,9 +71,19 @@ install-i18n: i18n
 
 ### Targets:
 
+# everything but the build files goes into the skin folder, themes/*.theme
+# (if any) into VDR's themes folder
+INSTALLFILES = $(filter-out Makefile $(PODIR) $(LOCALEDIR) themes,$(wildcard *))
+
 install: install-i18n
 	@mkdir -p $(DESTDIR)$(SKINDIR)
-	@cp -r * $(DESTDIR)$(SKINDIR)
+	@cp -r $(INSTALLFILES) $(DESTDIR)$(SKINDIR)
+ifneq ($(wildcard themes/*.theme),)
+	@mkdir -p $(DESTDIR)$(THEMESDIR)
+	@cp themes/*.theme $(DESTDIR)$(THEMESDIR)
+endif
 
 clean:
 	@-rm -rf $(LOCALEDIR) $(I18Npot) *~
+
+.PHONY: all i18n install install-i18n clean

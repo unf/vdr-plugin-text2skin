@@ -7,9 +7,6 @@
 #ifdef HAVE_IMAGEMAGICK
 #include <Magick++.h>
 using namespace Magick;
-#elif defined(HAVE_IMLIB2)
-#include "quantize.h"
-#include <Imlib2.h>
 #endif
 #include <glob.h>
 
@@ -279,57 +276,6 @@ bool cText2SkinBitmap::LoadNonXpm(const char *Filename, int height, int width, i
 		delete img;
 		return false;
 	}
-	return true;
-
-#elif defined(HAVE_IMLIB2)
-	Imlib_Image image;
-        unsigned char * outputImage = NULL;
-	unsigned int * outputPalette = NULL;
-	cQuantizeWu* quantizer = new cQuantizeWu();
-	cBitmap *bmp = NULL;
-	image = imlib_load_image(Filename);
-	if (!image)
-		return false;
-	Imlib_Context ctx = imlib_context_new();
-	imlib_context_push(ctx);
-	if (height != 0 || width != 0){
-		imlib_context_set_image(image);
-		image = imlib_create_cropped_scaled_image(0,0,imlib_image_get_width(), imlib_image_get_height() ,width , height);
-	}
-	imlib_context_set_image(image);
-	uint8_t *data = (uint8_t*)imlib_image_get_data_for_reading_only();
-	if (TrueColor) {
-		// Imlib2 keeps ARGB pixels in host byte order, like tColor
-		cImage *img = new cImage(cSize(imlib_image_get_width(), imlib_image_get_height()), (const tColor *)data);
-		imlib_free_image();
-		imlib_context_free(ctx);
-		mImages.push_back(img);
-		delete(quantizer);
-		return true;
-	}
-	bmp = new cBitmap(imlib_image_get_width(), imlib_image_get_height(), 8);
-	if ( colors != 0 ){
-        	quantizer->Quantize(data, imlib_image_get_width()* imlib_image_get_height(), colors);
-		outputImage = quantizer->OutputImage();
-		outputPalette = quantizer->OutputPalette();
-	}
-	int pos = 0;
-	for (int y = 0; y < bmp->Height(); ++y) {
-		for (int x = 0; x < bmp->Width(); ++x) {
-			if ( colors != 0 ){
-				bmp->DrawPixel(x, y ,  outputPalette[outputImage[y * bmp->Width() + x]] | 0xFF000000 );
-			}else{
-				tColor col = (data[pos + 3] << 24) | (data[pos + 2] << 16) | (data[pos + 1] << 8) | data[pos + 0];
-				bmp->DrawPixel(x, y, col);
-				pos += 4;
-			}
-		}
-	}
-
-	imlib_free_image();
-	imlib_context_free(ctx);
-	mBitmaps.push_back(bmp);
-	delete(quantizer);
 	return true;
 
 #else /* Not built with external image library */
