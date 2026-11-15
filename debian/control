@@ -10,7 +10,7 @@ Homepage: https://github.com/unf/vdr-plugin-text2skin
 Package: vdr-plugin-text2skin
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${vdr:Depends}
-Suggests: vdr-skin-anthra-1920-fst
+Suggests: vdr-skin-anthra-fst, vdr-skin-pearlhd
 Description: VDR plugin that loads and displays text based skins
  This plugin is designed to load and interpret a set of files describing the
  layout of the On Screen Display and to make this "Skin" available to VDR via
