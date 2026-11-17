@@ -73,6 +73,7 @@ private:
 
 	cxType GetDiskToken(const txToken &Token);
 	eOsdError SetupAreas(void);
+	static std::string FindImage(const std::string &Path);
 
 protected:
 	// Update thread
@@ -147,6 +148,7 @@ public:
 	static txPoint Transform(const txPoint &Pos, bool End = false);
 	static bool ItemColor(const std::string &Color, tColor &Result);
 	static std::string ImagePath(const std::string &Filename);
+	static void FlushImagePaths(void);
 	static cxType GetToken(const txToken &Token);
 
 	// a VDR list was busy (see cListReader): draw again after LIST_LOCK_RETRY

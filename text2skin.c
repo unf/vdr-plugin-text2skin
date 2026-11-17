@@ -6,6 +6,7 @@
 
 #include "text2skin.h"
 #include "bitmap.h"
+#include "render.h"
 #include "setup.h"
 #include "menu.h"
 #include "i18n.h"
@@ -42,6 +43,7 @@ cString cText2SkinPlugin::SVDRPCommand(const char *Command, const char *Option, 
 	if (strcasecmp(Command, "FLUS") == 0) {
 		// we use the default reply code here
 		cText2SkinBitmap::FlushCache();
+		cText2SkinRender::FlushImagePaths();
 		return "image cache flushed.";
 	}
 	return NULL;

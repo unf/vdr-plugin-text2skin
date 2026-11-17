@@ -56,6 +56,7 @@ cText2SkinRender::cText2SkinRender(cText2SkinLoader *Loader, cxDisplay::eType Di
 
 	mRender = this;
 	Text2SkinStatus.SetRender(this);
+	FlushImagePaths(); // new image files show up with the next display
 
 	SetDescription("Text2Skin: %s display update", cxDisplay::GetType(Display).c_str());
 
@@ -809,6 +810,18 @@ static std::string LowerCase(const std::string &Str, std::string::size_type From
 	return s;
 }
 
+// The path an image file name resolves to is kept until the next display opens
+// or the image cache is flushed: the conditions and images of a skin ask for the
+// same files with every update, each asking costs up to six file system calls.
+static std::map<std::string, std::string> ImagePaths;
+static cMutex ImagePathsMutex;
+
+void cText2SkinRender::FlushImagePaths(void)
+{
+	cMutexLock lock(&ImagePathsMutex);
+	ImagePaths.clear();
+}
+
 std::string cText2SkinRender::ImagePath(const std::string &Filename)
 {
 	if (!mRender)
@@ -816,6 +829,17 @@ std::string cText2SkinRender::ImagePath(const std::string &Filename)
 	std::string path = (*Filename.data() == '/')
 	                   ? Filename
 	                   : mRender->mBasePath + "/" + Filename;
+	cMutexLock lock(&ImagePathsMutex);
+	std::map<std::string, std::string>::const_iterator it = ImagePaths.find(path);
+	if (it != ImagePaths.end())
+		return it->second;
+	std::string found = FindImage(path);
+	ImagePaths[path] = found;
+	return found;
+}
+
+std::string cText2SkinRender::FindImage(const std::string &path)
+{
 	if (path.find('*') != std::string::npos || access(path.c_str(), F_OK) == 0)
 		return path;
 	// Logo collections made for other skins often use lower case file names

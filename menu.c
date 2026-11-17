@@ -2,6 +2,7 @@
 
 #include "menu.h"
 #include "bitmap.h"
+#include "render.h"
 #include "loader.h"
 #include "xml/skin.h"
 
@@ -136,6 +137,7 @@ eOSState cText2SkinSetupPage::ProcessKey(eKeys Key) {
 	if (state == osUser1) {
 		Skins.Message(mtInfo, tr("Flushing image cache..."));
 		cText2SkinBitmap::FlushCache();
+		cText2SkinRender::FlushImagePaths();
 		Skins.Message(mtInfo, NULL);
 		return osContinue;
 	}
