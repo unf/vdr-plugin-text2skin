@@ -19,6 +19,7 @@
 #include <vdr/keys.h>
 #include <vdr/plugin.h>
 #include <algorithm>
+#include <sys/stat.h>
 #include <unistd.h>
 
 using std::string;
@@ -798,6 +799,16 @@ bool cText2SkinRender::ItemColor(const std::string &Color, tColor &Result)
 	return true;
 }
 
+// lower case ASCII letters of Str, starting at position From
+static std::string LowerCase(const std::string &Str, std::string::size_type From)
+{
+	std::string s = Str;
+	for (std::string::size_type i = From; i < s.length(); i++)
+		if (s[i] >= 'A' && s[i] <= 'Z')
+			s[i] += 'a' - 'A';
+	return s;
+}
+
 std::string cText2SkinRender::ImagePath(const std::string &Filename)
 {
 	if (!mRender)
@@ -805,16 +816,32 @@ std::string cText2SkinRender::ImagePath(const std::string &Filename)
 	std::string path = (*Filename.data() == '/')
 	                   ? Filename
 	                   : mRender->mBasePath + "/" + Filename;
+	if (path.find('*') != std::string::npos || access(path.c_str(), F_OK) == 0)
+		return path;
 	// Logo collections made for other skins often use lower case file names
 	// ("das erste hd.png"), so fall back to the lower case file name if the
 	// exact one doesn't exist. Only ASCII letters of the file name are changed.
-	if (path.find('*') == std::string::npos && access(path.c_str(), F_OK) != 0) {
-		std::string lower = path;
-		std::string::size_type slash = lower.rfind('/');
-		for (std::string::size_type i = (slash == std::string::npos) ? 0 : slash + 1; i < lower.length(); i++)
-			if (lower[i] >= 'A' && lower[i] <= 'Z')
-				lower[i] += 'a' - 'A';
-		if (lower != path && access(lower.c_str(), F_OK) == 0)
+	std::string::size_type slash = path.rfind('/');
+	std::string lower = LowerCase(path, (slash == std::string::npos) ? 0 : slash + 1);
+	if (lower != path && access(lower.c_str(), F_OK) == 0)
+		return lower;
+	// A '/' in a channel name ("Sat.1/RLP") turns into a directory of the path,
+	// logo collections use '~' instead ("Sat.1~RLP.png"). The name starts after
+	// the longest leading part of the path that is an existing directory.
+	std::string::size_type dir = slash;
+	struct stat st;
+	while (dir != std::string::npos && dir > 0
+	       && !(stat(path.substr(0, dir).c_str(), &st) == 0 && S_ISDIR(st.st_mode)))
+		dir = path.rfind('/', dir - 1);
+	if (dir != std::string::npos && dir > 0 && dir < slash) {
+		std::string tilde = path;
+		for (std::string::size_type i = dir + 1; i < tilde.length(); i++)
+			if (tilde[i] == '/')
+				tilde[i] = '~';
+		if (access(tilde.c_str(), F_OK) == 0)
+			return tilde;
+		lower = LowerCase(tilde, dir + 1);
+		if (lower != tilde && access(lower.c_str(), F_OK) == 0)
 			return lower;
 	}
 	return path;
