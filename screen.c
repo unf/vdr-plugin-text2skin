@@ -10,7 +10,8 @@ cText2SkinScreen::cText2SkinScreen(bool OffScreen):
 	mOffScreen(OffScreen),
 	mNumRegions(0),
 	mCanvas(NULL),
-	mOrigin(0, 0)
+	mOrigin(0, 0),
+	mShownValid(false)
 {
 }
 
@@ -35,6 +36,8 @@ eOsdError cText2SkinScreen::SetAreas(const tArea *Areas, int NumAreas)
 	mNumRegions = 0;
 	DELETENULL(mCanvas);
 	mOrigin = cPoint(0, 0);
+	mShown.clear();
+	mShownValid = false;
 
 	// VDR allows SetAreas() again on the same OSD, but not every output device
 	// copes with it (softhddevice kept the deleted pixmaps and crashed). New
@@ -106,6 +109,7 @@ void cText2SkinScreen::Clear(void)
 {
 	if (mCanvas) {
 		mCanvas->Clear();
+		mShownValid = false; // hand over the complete canvas with the next Flush()
 		return;
 	}
 	for (int i = 0; i < mNumRegions; ++i) {
@@ -218,16 +222,49 @@ void cText2SkinScreen::Flush(void)
 		{
 			LOCK_PIXMAPS;
 			cRect r = mCanvas->DirtyDrawPort();
+			int stride = mCanvas->DrawPort().Width();
+			const tColor *pixels = mCanvas->Pixels();
+			if (!mShownValid) {
+				// new OSD or cleared canvas: hand over everything once
+				r = cRect(cPoint(0, 0), mCanvas->DrawPort().Size());
+				mShown.assign(pixels, pixels + stride * mCanvas->DrawPort().Height());
+				mShownValid = true;
+			}
+			else if (!r.IsEmpty()) {
+				// shrink the dirty rectangle to the pixels that differ from the OSD
+				int top = -1, bottom = -1, left = r.Right() + 1, right = r.Left() - 1;
+				for (int iy = r.Top(); iy <= r.Bottom(); ++iy) {
+					const tColor *a = pixels + iy * stride;
+					const tColor *b = &mShown[iy * stride];
+					if (memcmp(a + r.Left(), b + r.Left(), r.Width() * sizeof(tColor)) == 0)
+						continue;
+					if (top < 0)
+						top = iy;
+					bottom = iy;
+					int x1 = r.Left();
+					while (a[x1] == b[x1])
+						++x1;
+					int x2 = r.Right();
+					while (a[x2] == b[x2])
+						--x2;
+					left = std::min(left, x1);
+					right = std::max(right, x2);
+				}
+				r = top < 0 ? cRect() : cRect(left, top, right - left + 1, bottom - top + 1);
+				// remember what the OSD gets
+				for (int iy = r.Top(); iy <= r.Bottom() && !r.IsEmpty(); ++iy)
+					memcpy(&mShown[iy * stride + r.Left()], pixels + iy * stride + r.Left(),
+					       r.Width() * sizeof(tColor));
+			}
 			if (!r.IsEmpty()) {
 				cImage part(r.Size());
-				int stride = mCanvas->DrawPort().Width();
-				const tColor *src = mCanvas->Pixels() + r.Top() * stride + r.Left();
+				const tColor *src = pixels + r.Top() * stride + r.Left();
 				tColor *dst = (tColor *)part.Data();
 				for (int iy = 0; iy < r.Height(); ++iy, src += stride, dst += r.Width())
 					memcpy(dst, src, r.Width() * sizeof(tColor));
 				mOsd->DrawImage(r.Point(), part);
-				mCanvas->SetClean();
 			}
+			mCanvas->SetClean();
 		}
 		mOsd->Flush();
 		return;

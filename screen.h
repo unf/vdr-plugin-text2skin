@@ -37,6 +37,12 @@ private:
 	cText2SkinCanvas *mCanvas;
 	cPoint            mOrigin;
 
+	// true colour mode: copy of what the OSD shows, so Flush() hands over only
+	// pixels that really changed (a redraw marks everything it draws as dirty,
+	// even if most of it looks the same as before)
+	std::vector<tColor> mShown;
+	bool                mShownValid;
+
 	void BlendPixels(int x, int y, int Width, int Height, const tColor *Colors,
 	                 const cBitmap *Bitmap, const tColor *ColorMask);
 
