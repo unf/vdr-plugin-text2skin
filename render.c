@@ -19,6 +19,7 @@
 #include <vdr/keys.h>
 #include <vdr/plugin.h>
 #include <algorithm>
+#include <unistd.h>
 
 using std::string;
 
@@ -799,11 +800,24 @@ bool cText2SkinRender::ItemColor(const std::string &Color, tColor &Result)
 
 std::string cText2SkinRender::ImagePath(const std::string &Filename)
 {
-	if (mRender)
-		return (*Filename.data() == '/')
-		       ? Filename
-		       : mRender->mBasePath + "/" + Filename;
-	return "";
+	if (!mRender)
+		return "";
+	std::string path = (*Filename.data() == '/')
+	                   ? Filename
+	                   : mRender->mBasePath + "/" + Filename;
+	// Logo collections made for other skins often use lower case file names
+	// ("das erste hd.png"), so fall back to the lower case file name if the
+	// exact one doesn't exist. Only ASCII letters of the file name are changed.
+	if (path.find('*') == std::string::npos && access(path.c_str(), F_OK) != 0) {
+		std::string lower = path;
+		std::string::size_type slash = lower.rfind('/');
+		for (std::string::size_type i = (slash == std::string::npos) ? 0 : slash + 1; i < lower.length(); i++)
+			if (lower[i] >= 'A' && lower[i] <= 'Z')
+				lower[i] += 'a' - 'A';
+		if (lower != path && access(lower.c_str(), F_OK) == 0)
+			return lower;
+	}
+	return path;
 }
 
 cxType cText2SkinRender::GetToken(const txToken &Token)
