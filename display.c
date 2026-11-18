@@ -1162,7 +1162,7 @@ cxType cText2SkinDisplayMenu::GetTokenData(const txToken &Token)
 						auxFound = tim->Aux() != NULL;
 					}
 				}
-				ExtPresentDescription = AddExtInfoToDescription(mEvent.title.c_str(), mEvent.shortText.c_str(), mEvent.description.c_str(), auxFound ? aux.c_str() : NULL, Text2SkinSetup.StripAux);
+				ExtPresentDescription = AddExtInfoToDescription(mEvent.title.c_str(), mEvent.shortText.c_str(), mEvent.description.c_str(), Text2SkinSetup.ShowAux && auxFound ? aux.c_str() : NULL, Text2SkinSetup.StripAux);
 			}
 			return (cxType)ExtPresentDescription;
 		} else

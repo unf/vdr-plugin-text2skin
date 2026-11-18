@@ -32,7 +32,7 @@ msgstr "Ulkoasu on liian suuri tai väärin asemoitu"
 msgid "Show scrollbar in the menus"
 msgstr "Näytä vierityspalkki valikoissa"
 
-msgid "Scrolling behaviour"
+msgid "Scrolling text"
 msgstr "Pitkien tekstien vieritys"
 
 msgid "to the left"
@@ -41,29 +41,11 @@ msgstr "vasemmalle"
 msgid "left and right"
 msgstr "edestakaisin"
 
-msgid "Reset Marquee for new item"
-msgstr "Aloita tekstin vieritys alusta"
-
-msgid "Show auxiliary infos of recordings"
-msgstr "Näytä tallenteiden lisätiedot"
-
 #. TRANSLATORS: note the leading blanks!
-msgid "   Extract known tags"
-msgstr "   Tulkitse tunnetut tagit"
+msgid "   Restart for a new item"
+msgstr "   Aloita tekstin vieritys alusta"
 
-msgid "Use 'epgsearch' to check timer-conflicts"
-msgstr "Tarkista ajastinongelmat epgsearch:lla"
-
-msgid "Flush image cache"
-msgstr "Tyhjennä kuvat välimuistista"
-
-msgid "Max. image cache size"
-msgstr "Välimuistin maksimikoko"
-
-msgid "Max. characters per line"
-msgstr "Rivin maksimipituus"
-
-msgid "Tabulator width"
+msgid "Tab width"
 msgstr "Sarkaimen koko"
 
 msgid "narrow"
@@ -72,9 +54,29 @@ msgstr "kapea"
 msgid "wide"
 msgstr "leveä"
 
+msgid "Use 'epgsearch' to check timer-conflicts"
+msgstr "Tarkista ajastinongelmat epgsearch:lla"
+
+msgid "Max. images in cache"
+msgstr "Välimuistin maksimikoko"
+
+msgid "Auxiliary infos of timers and recordings"
+msgstr ""
+
+#. TRANSLATORS: note the leading blanks!
+msgid "   Extract known tags"
+msgstr "   Tulkitse tunnetut tagit"
+
+#. TRANSLATORS: note the leading blanks!
+msgid "   Max. characters per line"
+msgstr "   Rivin maksimipituus"
+
 #, c-format
 msgid "Options of skin '%s'"
 msgstr "Ulkoasun '%s' asetukset"
+
+msgid "Flush image cache"
+msgstr "Tyhjennä kuvat välimuistista"
 
 msgid "Flushing image cache..."
 msgstr "Tyhjennetään välimuistia..."

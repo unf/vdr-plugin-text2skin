@@ -25,23 +25,27 @@ void cText2SkinSetupPage::Setup(void) {
 	Clear();
 
 	Add(new cMenuEditBoolItem(tr("Show scrollbar in the menus"), &mData.MenuScrollbar));
-	Add(new cMenuEditBoolItem(tr("Scrolling behaviour"), &mData.MarqueeLeftRight, tr("to the left"), tr("left and right")));
-	Add(new cMenuEditBoolItem(tr("Reset Marquee for new item"), &mData.MarqueeReset));
-	Add(new cMenuEditBoolItem(tr("Show auxiliary infos of recordings"), &mData.ShowAux));
-	if (mData.ShowAux)
+	Add(new cMenuEditBoolItem(tr("Scrolling text"), &mData.MarqueeLeftRight, tr("to the left"), tr("left and right")));
+	// TRANSLATORS: note the leading blanks!
+	Add(new cMenuEditBoolItem(tr("   Restart for a new item"), &mData.MarqueeReset));
+	Add(new cMenuEditBoolItem(tr("Tab width"), &mData.TabWidth, tr("narrow"), tr("wide")));
+	Add(new cMenuEditBoolItem(tr("Use 'epgsearch' to check timer-conflicts"), &mData.CheckTimerConflict));
+	Add(new cMenuEditIntItem(tr("Max. images in cache"), &mData.MaxCacheFill, 1));
+	// {ExtPresentDescription}, {ExtRecordingDescription}
+	Add(new cMenuEditBoolItem(tr("Auxiliary infos of timers and recordings"), &mData.ShowAux));
+	if (mData.ShowAux) {
 		// TRANSLATORS: note the leading blanks!
 		Add(new cMenuEditBoolItem(tr("   Extract known tags"), &mData.StripAux));
-	Add(new cMenuEditBoolItem(tr("Use 'epgsearch' to check timer-conflicts"), &mData.CheckTimerConflict));
-	Add(new cOsdItem(tr("Flush image cache"), osUser1));
-	Add(new cMenuEditIntItem(tr("Max. image cache size"), &mData.MaxCacheFill, 1));
-	Add(new cMenuEditIntItem(tr("Max. characters per line"), &mData.MaxChars, 1));
-	Add(new cMenuEditBoolItem(tr("Tabulator width"), &mData.TabWidth, tr("narrow"), tr("wide")));
+		// TRANSLATORS: note the leading blanks!
+		Add(new cMenuEditIntItem(tr("   Max. characters per line"), &mData.MaxChars, 1));
+	}
 
 	if (mSkin != NULL) {
 		Add(new cOsdItem("", osUnknown, false));
-		Add(new cOsdItem(cString::sprintf("%s...", *cString::sprintf(tr("Options of skin '%s'"), mSkin->Title().c_str())), osUser2));
+		Add(new cOsdItem(cString::sprintf("%s...", *cString::sprintf(tr("Options of skin '%s'"), mSkin->Title().c_str())), osUser1));
 	}
 
+	SetHelp(tr("Flush image cache"));
 	SetCurrent(Get(current));
 	Display();
 }
@@ -63,14 +67,14 @@ eOSState cText2SkinSetupPage::ProcessKey(eKeys Key) {
 	int oldShowAux = mData.ShowAux;
 
 	eOSState state = cMenuSetupPage::ProcessKey(Key);
-	if (state == osUser1) {
+	if (state == osUnknown && Key == kRed && !HasSubMenu()) {
 		Skins.Message(mtInfo, tr("Flushing image cache..."));
 		cText2SkinBitmap::FlushCache();
 		cText2SkinRender::FlushImagePaths();
 		Skins.Message(mtInfo, NULL);
 		return osContinue;
 	}
-	if (state == osUser2 && mSkin != NULL)
+	if (state == osUser1 && mSkin != NULL)
 		return AddSubMenu(new cText2SkinOptionsPage(mSkin));
 
 	if (mData.ShowAux != oldShowAux)

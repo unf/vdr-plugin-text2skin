@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: vdr-text2skin 2.0.0\n"
 "Report-Msgid-Bugs-To: <https://github.com/unf/vdr-plugin-text2skin/issues>\n"
 "POT-Creation-Date: 2026-11-14 13:44+0100\n"
-"PO-Revision-Date: 2026-11-14 13:45+0100\n"
+"PO-Revision-Date: 2026-11-18 14:00+0100\n"
 "Last-Translator: Frank Neumann <fnu@vdr-portal.de>\n"
 "Language-Team: German <vdr@linuxtv.org>\n"
 "Language: de\n"
@@ -31,10 +31,10 @@ msgid "Skin too large or incorrectly aligned"
 msgstr "Skin zu groß oder nicht korrekt ausgerichtet"
 
 msgid "Show scrollbar in the menus"
-msgstr "Zeige Bildlaufleiste in Menüs"
+msgstr "Bildlaufleiste in Menüs"
 
-msgid "Scrolling behaviour"
-msgstr "Scroll-Verhalten"
+msgid "Scrolling text"
+msgstr "Lauftext"
 
 msgid "to the left"
 msgstr "nach links"
@@ -42,30 +42,12 @@ msgstr "nach links"
 msgid "left and right"
 msgstr "links und rechts"
 
-msgid "Reset Marquee for new item"
-msgstr "Marquee für neues Item zurücksetzen"
-
-msgid "Show auxiliary infos of recordings"
-msgstr "Zusatzinfos der Aufnahmen anzeigen"
-
 #. TRANSLATORS: note the leading blanks!
-msgid "   Extract known tags"
-msgstr "   Bekannte Tags extrahieren"
+msgid "   Restart for a new item"
+msgstr "   Bei neuem Eintrag neu starten"
 
-msgid "Use 'epgsearch' to check timer-conflicts"
-msgstr "Timerkonflikte mit 'epgsearch' überprüfen"
-
-msgid "Flush image cache"
-msgstr "Bildspeicher leeren"
-
-msgid "Max. image cache size"
-msgstr "Max. Größe des Bildspeichers"
-
-msgid "Max. characters per line"
-msgstr "Max. Zeichenzahl pro Linie"
-
-msgid "Tabulator width"
-msgstr "Tabulator Breite"
+msgid "Tab width"
+msgstr "Tabulatorbreite"
 
 msgid "narrow"
 msgstr "schmal"
@@ -73,9 +55,29 @@ msgstr "schmal"
 msgid "wide"
 msgstr "breit"
 
+msgid "Use 'epgsearch' to check timer-conflicts"
+msgstr "Timerkonflikte über epgsearch"
+
+msgid "Max. images in cache"
+msgstr "Bildspeicher (Anzahl Bilder)"
+
+msgid "Auxiliary infos of timers and recordings"
+msgstr "Zusatzinfos von Timern und Aufnahmen"
+
+#. TRANSLATORS: note the leading blanks!
+msgid "   Extract known tags"
+msgstr "   Bekannte Tags extrahieren"
+
+#. TRANSLATORS: note the leading blanks!
+msgid "   Max. characters per line"
+msgstr "   Max. Zeichen pro Zeile"
+
 #, c-format
 msgid "Options of skin '%s'"
 msgstr "Optionen des Skins '%s'"
+
+msgid "Flush image cache"
+msgstr "Bildspeicher leeren"
 
 msgid "Flushing image cache..."
 msgstr "Bildspeicher wird geleert..."

@@ -34,7 +34,7 @@ msgstr "Interfaccia troppo grande o allineamento incorretto"
 msgid "Show scrollbar in the menus"
 msgstr "Mostra barra scorrimento nei menu"
 
-msgid "Scrolling behaviour"
+msgid "Scrolling text"
 msgstr "Modalità scorrimento"
 
 msgid "to the left"
@@ -43,29 +43,11 @@ msgstr "verso sinistra"
 msgid "left and right"
 msgstr "sinistra e destra"
 
-msgid "Reset Marquee for new item"
-msgstr "Reimposta Marquee per nuovo valore"
-
-msgid "Show auxiliary infos of recordings"
-msgstr "Mostra info ausiliarie nelle registrazioni"
-
 #. TRANSLATORS: note the leading blanks!
-msgid "   Extract known tags"
-msgstr "   Estrai etichette conosciute"
+msgid "   Restart for a new item"
+msgstr "   Reimposta Marquee per nuovo valore"
 
-msgid "Use 'epgsearch' to check timer-conflicts"
-msgstr "Utilizza 'epgsearch' per verifica conflitti timer"
-
-msgid "Flush image cache"
-msgstr "Svuota cache immagini"
-
-msgid "Max. image cache size"
-msgstr "Dim. massima cache immagini"
-
-msgid "Max. characters per line"
-msgstr ""
-
-msgid "Tabulator width"
+msgid "Tab width"
 msgstr ""
 
 msgid "narrow"
@@ -74,9 +56,29 @@ msgstr ""
 msgid "wide"
 msgstr ""
 
+msgid "Use 'epgsearch' to check timer-conflicts"
+msgstr "Utilizza 'epgsearch' per verifica conflitti timer"
+
+msgid "Max. images in cache"
+msgstr "Dim. massima cache immagini"
+
+msgid "Auxiliary infos of timers and recordings"
+msgstr ""
+
+#. TRANSLATORS: note the leading blanks!
+msgid "   Extract known tags"
+msgstr "   Estrai etichette conosciute"
+
+#. TRANSLATORS: note the leading blanks!
+msgid "   Max. characters per line"
+msgstr ""
+
 #, c-format
 msgid "Options of skin '%s'"
 msgstr "Opzioni della skin '%s'"
+
+msgid "Flush image cache"
+msgstr "Svuota cache immagini"
 
 msgid "Flushing image cache..."
 msgstr "Svuotamento cache immagini..."
