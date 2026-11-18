@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vdr-text2skin 2.0.0\n"
 "Report-Msgid-Bugs-To: <https://github.com/unf/vdr-plugin-text2skin/issues>\n"
-"POT-Creation-Date: 2026-11-14 13:44+0100\n"
+"POT-Creation-Date: 2026-11-18 12:54+0100\n"
 "PO-Revision-Date: 2026-11-18 14:00+0100\n"
 "Last-Translator: Frank Neumann <fnu@vdr-portal.de>\n"
 "Language-Team: German <vdr@linuxtv.org>\n"
@@ -33,14 +33,14 @@ msgstr "Skin zu groß oder nicht korrekt ausgerichtet"
 msgid "Show scrollbar in the menus"
 msgstr "Bildlaufleiste in Menüs"
 
-msgid "Scrolling text"
-msgstr "Lauftext"
-
 msgid "to the left"
 msgstr "nach links"
 
 msgid "left and right"
 msgstr "links und rechts"
+
+msgid "Scrolling text"
+msgstr "Lauftext"
 
 #. TRANSLATORS: note the leading blanks!
 msgid "   Restart for a new item"

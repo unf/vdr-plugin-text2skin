@@ -25,7 +25,10 @@ void cText2SkinSetupPage::Setup(void) {
 	Clear();
 
 	Add(new cMenuEditBoolItem(tr("Show scrollbar in the menus"), &mData.MenuScrollbar));
-	Add(new cMenuEditBoolItem(tr("Scrolling text"), &mData.MarqueeLeftRight, tr("to the left"), tr("left and right")));
+	// not cMenuEditBoolItem, VDR cuts its texts after 15 bytes
+	mScrollTexts[0] = tr("to the left");
+	mScrollTexts[1] = tr("left and right");
+	Add(new cMenuEditStraItem(tr("Scrolling text"), &mData.MarqueeLeftRight, 2, mScrollTexts));
 	// TRANSLATORS: note the leading blanks!
 	Add(new cMenuEditBoolItem(tr("   Restart for a new item"), &mData.MarqueeReset));
 	Add(new cMenuEditBoolItem(tr("Tab width"), &mData.TabWidth, tr("narrow"), tr("wide")));

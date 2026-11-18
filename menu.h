@@ -15,6 +15,7 @@ class cText2SkinSetupPage: public cMenuSetupPage {
 private:
 	cText2SkinSetup  mData;
 	cxSkin          *mSkin; // current skin, if it is one of text2skin and has options
+	const char      *mScrollTexts[2];
 
 public:
 	cText2SkinSetupPage(void);

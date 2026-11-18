@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vdr-text2skin 2.0.0\n"
 "Report-Msgid-Bugs-To: <https://github.com/unf/vdr-plugin-text2skin/issues>\n"
-"POT-Creation-Date: 2026-11-14 13:44+0100\n"
+"POT-Creation-Date: 2026-11-18 12:54+0100\n"
 "PO-Revision-Date: 2017-06-15 15:00+0200\n"
 "Last-Translator: Rolf Ahrenberg <rahrenbe@cc.hut.fi>\n"
 "Language-Team: Finnish <vdr@linuxtv.org>\n"
@@ -32,14 +32,14 @@ msgstr "Ulkoasu on liian suuri tai väärin asemoitu"
 msgid "Show scrollbar in the menus"
 msgstr "Näytä vierityspalkki valikoissa"
 
-msgid "Scrolling text"
-msgstr "Pitkien tekstien vieritys"
-
 msgid "to the left"
 msgstr "vasemmalle"
 
 msgid "left and right"
 msgstr "edestakaisin"
+
+msgid "Scrolling text"
+msgstr "Pitkien tekstien vieritys"
 
 #. TRANSLATORS: note the leading blanks!
 msgid "   Restart for a new item"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vdr-text2skin 2.0.0\n"
 "Report-Msgid-Bugs-To: <https://github.com/unf/vdr-plugin-text2skin/issues>\n"
-"POT-Creation-Date: 2026-11-14 13:44+0100\n"
+"POT-Creation-Date: 2026-11-18 12:54+0100\n"
 "PO-Revision-Date: 2017-06-15 15:00+0100\n"
 "Last-Translator: Diego Pierotto <vdr-italian@tiscali.it>\n"
 "Language-Team: Italian <vdr@linuxtv.org>\n"
@@ -34,14 +34,14 @@ msgstr "Interfaccia troppo grande o allineamento incorretto"
 msgid "Show scrollbar in the menus"
 msgstr "Mostra barra scorrimento nei menu"
 
-msgid "Scrolling text"
-msgstr "Modalità scorrimento"
-
 msgid "to the left"
 msgstr "verso sinistra"
 
 msgid "left and right"
 msgstr "sinistra e destra"
+
+msgid "Scrolling text"
+msgstr "Modalità scorrimento"
 
 #. TRANSLATORS: note the leading blanks!
 msgid "   Restart for a new item"
