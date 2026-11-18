@@ -13,7 +13,21 @@ class cxSkin;
 
 class cText2SkinSetupPage: public cMenuSetupPage {
 private:
-	// edit buffer of an option of the current skin
+	cText2SkinSetup  mData;
+	cxSkin          *mSkin; // current skin, if it is one of text2skin and has options
+
+public:
+	cText2SkinSetupPage(void);
+
+	void Setup(void);
+	virtual void Store(void);
+	eOSState ProcessKey(eKeys Key);
+};
+
+// The options of the current skin, as a page of its own.
+class cText2SkinOptionsPage: public cMenuSetupPage {
+private:
+	// edit buffer of an option of the skin
 	struct tOptionEdit {
 		int                      Index;  // in cxSkin::Options()
 		int                      Value;  // bool, choice
@@ -22,17 +36,15 @@ private:
 		std::vector<const char*> LabelPtrs;
 	};
 
-	cText2SkinSetup           mData;
 	cxSkin                   *mSkin;
 	std::vector<tOptionEdit*> mOptions;
 
 public:
-	cText2SkinSetupPage(void);
-	virtual ~cText2SkinSetupPage();
+	cText2SkinOptionsPage(cxSkin *Skin);
+	virtual ~cText2SkinOptionsPage();
 
 	void Setup(void);
 	virtual void Store(void);
-	eOSState ProcessKey(eKeys Key);
 };
 
 #endif // VDR_TEXT2SKIN_MENU_H

@@ -5,6 +5,7 @@
 #include "render.h"
 #include "loader.h"
 #include "xml/skin.h"
+#include <vdr/plugin.h>
 
 // --- cText2SkinSetupPage ----------------------------------------------------
 
@@ -12,40 +13,10 @@ cText2SkinSetupPage::cText2SkinSetupPage(void):
 	mData(Text2SkinSetup),
 	mSkin(NULL)
 {
-	// options of the current skin, if it is one of text2skin
+	// the current skin gets a page for its options, if it is one of text2skin and has some
 	cText2SkinLoader *loader = dynamic_cast<cText2SkinLoader*>(Skins.Current());
-	if (loader != NULL && loader->Data() != NULL) {
+	if (loader != NULL && loader->Data() != NULL && !loader->Data()->Options().empty())
 		mSkin = loader->Data();
-		const txOptions &options = mSkin->Options();
-		for (uint i = 0; i < options.size(); ++i) {
-			const txOption &option = options[i];
-			std::string value = option.Normalize(Text2SkinOptions.Get(mSkin->Name(), option.Name, option.Default));
-			tOptionEdit *edit = new tOptionEdit;
-			edit->Index = i;
-			edit->Value = 0;
-			edit->String[0] = '\0';
-			switch (option.Type) {
-			case txOption::oBool:
-				edit->Value = value == "1";
-				break;
-
-			case txOption::oChoice:
-				for (uint v = 0; v < option.Values.size(); ++v) {
-					if (option.Values[v] == value)
-						edit->Value = v;
-					edit->Labels.push_back(mSkin->Translate(option.Values[v]));
-				}
-				for (uint v = 0; v < edit->Labels.size(); ++v)
-					edit->LabelPtrs.push_back(edit->Labels[v].c_str());
-				break;
-
-			case txOption::oString:
-				strn0cpy(edit->String, value.c_str(), sizeof(edit->String));
-				break;
-			}
-			mOptions.push_back(edit);
-		}
-	}
 	Setup();
 }
 
@@ -66,35 +37,13 @@ void cText2SkinSetupPage::Setup(void) {
 	Add(new cMenuEditIntItem(tr("Max. characters per line"), &mData.MaxChars, 1));
 	Add(new cMenuEditBoolItem(tr("Tabulator width"), &mData.TabWidth, tr("narrow"), tr("wide")));
 
-	if (mSkin != NULL && !mOptions.empty()) {
-		Add(new cOsdItem(cString::sprintf(tr("Options of skin '%s'"), mSkin->Title().c_str()), osUnknown, false));
-		for (uint i = 0; i < mOptions.size(); ++i) {
-			tOptionEdit *edit = mOptions[i];
-			const txOption &option = mSkin->Options()[edit->Index];
-			std::string title = mSkin->Translate(option.Title.empty() ? option.Name : option.Title);
-			switch (option.Type) {
-			case txOption::oBool:
-				Add(new cMenuEditBoolItem(title.c_str(), &edit->Value));
-				break;
-
-			case txOption::oChoice:
-				Add(new cMenuEditStraItem(title.c_str(), &edit->Value, edit->LabelPtrs.size(), &edit->LabelPtrs[0]));
-				break;
-
-			case txOption::oString:
-				Add(new cMenuEditStrItem(title.c_str(), edit->String, sizeof(edit->String)));
-				break;
-			}
-		}
+	if (mSkin != NULL) {
+		Add(new cOsdItem("", osUnknown, false));
+		Add(new cOsdItem(cString::sprintf("%s...", *cString::sprintf(tr("Options of skin '%s'"), mSkin->Title().c_str())), osUser2));
 	}
 
 	SetCurrent(Get(current));
 	Display();
-}
-
-cText2SkinSetupPage::~cText2SkinSetupPage() {
-	for (uint i = 0; i < mOptions.size(); ++i)
-		delete mOptions[i];
 }
 
 void cText2SkinSetupPage::Store(void) {
@@ -108,9 +57,107 @@ void cText2SkinSetupPage::Store(void) {
 	SetupStore("MaxChars", mData.MaxChars);
 	SetupStore("TabWidth", mData.TabWidth);
 	Text2SkinSetup = mData;
+}
 
-	// options of the skin: only values different from the default go to setup.conf
-	for (uint i = 0; mSkin != NULL && i < mOptions.size(); ++i) {
+eOSState cText2SkinSetupPage::ProcessKey(eKeys Key) {
+	int oldShowAux = mData.ShowAux;
+
+	eOSState state = cMenuSetupPage::ProcessKey(Key);
+	if (state == osUser1) {
+		Skins.Message(mtInfo, tr("Flushing image cache..."));
+		cText2SkinBitmap::FlushCache();
+		cText2SkinRender::FlushImagePaths();
+		Skins.Message(mtInfo, NULL);
+		return osContinue;
+	}
+	if (state == osUser2 && mSkin != NULL)
+		return AddSubMenu(new cText2SkinOptionsPage(mSkin));
+
+	if (mData.ShowAux != oldShowAux)
+		Setup();
+
+	return state;
+}
+
+// --- cText2SkinOptionsPage --------------------------------------------------
+
+cText2SkinOptionsPage::cText2SkinOptionsPage(cxSkin *Skin):
+	mSkin(Skin)
+{
+	// stores into the setup of text2skin
+	cPlugin *plugin = cPluginManager::GetPlugin("text2skin");
+	if (plugin != NULL)
+		SetPlugin(plugin);
+	// "Setup - Options of skin 'X'"
+	SetSection(cString::sprintf(tr("Options of skin '%s'"), mSkin->Title().c_str()));
+
+	const txOptions &options = mSkin->Options();
+	for (uint i = 0; i < options.size(); ++i) {
+		const txOption &option = options[i];
+		std::string value = option.Normalize(Text2SkinOptions.Get(mSkin->Name(), option.Name, option.Default));
+		tOptionEdit *edit = new tOptionEdit;
+		edit->Index = i;
+		edit->Value = 0;
+		edit->String[0] = '\0';
+		switch (option.Type) {
+		case txOption::oBool:
+			edit->Value = value == "1";
+			break;
+
+		case txOption::oChoice:
+			for (uint v = 0; v < option.Values.size(); ++v) {
+				if (option.Values[v] == value)
+					edit->Value = v;
+				edit->Labels.push_back(mSkin->Translate(option.Values[v]));
+			}
+			for (uint v = 0; v < edit->Labels.size(); ++v)
+				edit->LabelPtrs.push_back(edit->Labels[v].c_str());
+			break;
+
+		case txOption::oString:
+			strn0cpy(edit->String, value.c_str(), sizeof(edit->String));
+			break;
+		}
+		mOptions.push_back(edit);
+	}
+	Setup();
+}
+
+cText2SkinOptionsPage::~cText2SkinOptionsPage() {
+	for (uint i = 0; i < mOptions.size(); ++i)
+		delete mOptions[i];
+}
+
+void cText2SkinOptionsPage::Setup(void) {
+	int current = Current();
+	Clear();
+
+	for (uint i = 0; i < mOptions.size(); ++i) {
+		tOptionEdit *edit = mOptions[i];
+		const txOption &option = mSkin->Options()[edit->Index];
+		std::string title = mSkin->Translate(option.Title.empty() ? option.Name : option.Title);
+		switch (option.Type) {
+		case txOption::oBool:
+			Add(new cMenuEditBoolItem(title.c_str(), &edit->Value));
+			break;
+
+		case txOption::oChoice:
+			Add(new cMenuEditStraItem(title.c_str(), &edit->Value, edit->LabelPtrs.size(), &edit->LabelPtrs[0]));
+			break;
+
+		case txOption::oString:
+			Add(new cMenuEditStrItem(title.c_str(), edit->String, sizeof(edit->String)));
+			break;
+		}
+	}
+
+	SetCurrent(Get(current));
+	Display();
+}
+
+void cText2SkinOptionsPage::Store(void) {
+	// only values different from the default go to setup.conf
+	for (uint i = 0; i < mOptions.size(); ++i) {
 		tOptionEdit *edit = mOptions[i];
 		const txOption &option = mSkin->Options()[edit->Index];
 		std::string value;
@@ -129,22 +176,3 @@ void cText2SkinSetupPage::Store(void) {
 		}
 	}
 }
-
-eOSState cText2SkinSetupPage::ProcessKey(eKeys Key) {
-	int oldShowAux = mData.ShowAux;
-
-	eOSState state = cMenuSetupPage::ProcessKey(Key);
-	if (state == osUser1) {
-		Skins.Message(mtInfo, tr("Flushing image cache..."));
-		cText2SkinBitmap::FlushCache();
-		cText2SkinRender::FlushImagePaths();
-		Skins.Message(mtInfo, NULL);
-		return osContinue;
-	}
-
-	if (mData.ShowAux != oldShowAux)
-		Setup();
-
-	return state;
-}
-
